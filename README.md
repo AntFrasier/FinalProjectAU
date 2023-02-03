@@ -1,14 +1,14 @@
 ## FinalProjectAU
 
-# RoyalEth Project :
+# LoyaltEth Project :
 
 This project will be an interface for other projects or services to allow theme to get engagement to their service via loyalies card represented whith an NFT.
 
 # Stack :
 Vite
 React
-mongoDB
-Express
+mongoDB (via mongoose)
+Expressnpm
 Mongoose
 
 ChakraUI
