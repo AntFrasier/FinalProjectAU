@@ -1,0 +1,14 @@
+{
+  "name": "hardhat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "deploy.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "author": "Cyril Maranber",
+  "license": "MIT",
+  "dependencies": {
+    "hardhat": "^2.12.6"
+  }
+}

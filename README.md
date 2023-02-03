@@ -7,8 +7,8 @@ This project will be an interface for other projects or services to allow theme 
 # Stack :
 Vite
 React
-mongoDB (via mongoose)
-Expressnpm
+mongoDB 
+Express
 Mongoose
 
 ChakraUI
