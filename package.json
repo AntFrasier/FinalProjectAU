@@ -1,0 +1,19 @@
+{
+  "name": "finalprojectau",
+  "version": "1.0.0",
+  "description": "This project will be an interface for other projects or services to allow theme to get engagement to their service via loyalies card represented whith an NFT.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AntFrasier/FinalProjectAU.git"
+  },
+  "author": "cyril Maranber",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AntFrasier/FinalProjectAU/issues"
+  },
+  "homepage": "https://github.com/AntFrasier/FinalProjectAU#readme"
+}
