@@ -10,7 +10,7 @@ React
 mongoDB 
 Express
 Mongoose
-
+Hardhat
 ChakraUI
 
 # TODO : 
