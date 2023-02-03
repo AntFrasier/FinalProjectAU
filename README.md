@@ -22,3 +22,5 @@ ChakraUI
     - create the factory smartcontract that will create partener Smart contract
     - create this nft smart contract (erc 1155 ??)
     - create the front 
+
+Please feel free to contact me : [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/maranberc.svg?style=social&label=Follow%20MaranberC)](https://twitter.com/MaranberC)

@@ -11,29 +11,28 @@ const campagneSchema = new Schema ( {
         type: String,
         required: true,
     },
-    contractAddress: {
-        type: String,
-        required: true,
-    },
-    PayementAddress: {
-        type: String,
-        required: true,
-    },
-    NFTAddress: {
-        type: String,
-        required: true,
-    },
-    metadata: {
-        duration:{
-            type: Number,
-            require: true,
-        },
-        discount:{
-            type: Number,
-            require: true,
-        },
-    }
-
+    // contractAddress: {
+    //     type: String,
+    //     required: true,
+    // },
+    // PayementAddress: {
+    //     type: String,
+    //     required: true,
+    // },
+    // NFTAddress: {
+    //     type: String,
+    //     required: true,
+    // },
+    // metadata: {
+    //     duration:{
+    //         type: Number,
+    //         require: true,
+    //     },
+    //     discount:{
+    //         type: Number,
+    //         require: true,
+    //     },
+    // }
 });
 
 module.exports = mongoose.model('Campagne', campagneSchema);

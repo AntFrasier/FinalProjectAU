@@ -4,11 +4,14 @@
   "description": "",
   "main": "deploy.js",
   "scripts": {
-    "test": "test.js"
+    "test": "test.js",
+    "chain": "hardhat node --network hardhat"
   },
   "author": "Cyril Maranber",
   "license": "MIT",
   "dependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.1",
+    "dotenv": "^16.0.3",
     "hardhat": "^2.12.6"
   }
 }
