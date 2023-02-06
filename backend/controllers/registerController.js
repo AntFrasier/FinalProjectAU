@@ -8,8 +8,13 @@ async function addNewUser(req, res) {
     if (existUser) return res.status(409).send({message: "user already exist"});
     try {
         const result = await User.create ({
+            "name": user.name,
             "address" : user.address,
+            "roles" : user.role,
+            "webSite" : user.website,
+            "signedHash": user.signature,
         })
+
         console.log(result);
         res.status(201).send({message : `New user ${user.address} created.`})
     } catch (err) {

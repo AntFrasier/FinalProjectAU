@@ -3,12 +3,17 @@ import {
   modalConnectors,
   walletConnectProvider,
 } from "@web3modal/ethereum";
-import { ChakraProvider } from '@chakra-ui/react';
+import { Box, ChakraProvider } from '@chakra-ui/react';
 import { extendTheme } from '@chakra-ui/react';
 import { Web3Modal, Web3Button } from "@web3modal/react";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { goerli } from "wagmi/chains";
+import Index from "./pages/Index";
+import About from "./pages/About";
 import Header from "./component/Header";
+import { Route, Routes } from 'react-router-dom';
+import PartnerRegistration from "./pages/PartnerRegistration";
+
 
 const colors = {
   brand: {
@@ -47,11 +52,18 @@ function App() {
     <>
     <ChakraProvider theme={theme}>
       <WagmiConfig client={wagmiClient}>
-        <Header />
-        <Web3Modal
-        projectId= {wagmiKey}
-        ethereumClient={ethereumClient}
-        />
+      <Header />
+      <Box pl={15}>
+          <Routes>
+              <Route path="/" element = {<Index />} />
+              <Route path="/about" element = {<About />} />
+              <Route path="/partnerRegistration" element = {<PartnerRegistration />} />
+          </Routes>
+          <Web3Modal
+          projectId= {wagmiKey}
+          ethereumClient={ethereumClient}
+          />
+        </Box>
       </WagmiConfig>
     </ChakraProvider>
   </>
