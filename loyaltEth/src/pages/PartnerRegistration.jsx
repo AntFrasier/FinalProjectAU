@@ -12,7 +12,7 @@ import {
 import { Web3Button } from "@web3modal/react";
 
 const PartnerRegistration = () => {
-  const [active, setActive] = useState(false);
+  const [active, setActive] = useState('false');
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState();
   const [webSite, setWebSite] = useState();
