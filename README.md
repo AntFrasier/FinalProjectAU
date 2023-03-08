@@ -19,7 +19,7 @@ ChakraUI
     - Create DataBase models
     - Add auth front and back using Wallet connect.
     - create the modele smart contract that allow you to accept payment (eth or erc20)
-    - create the factory smartcontract that will create partener Smart contract
+    - create the factory smartcontract that will create partner Smart contract
     - create this nft smart contract (erc 1155 ??)
     - create the front 
 
