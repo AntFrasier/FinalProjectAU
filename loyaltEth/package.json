@@ -13,6 +13,7 @@
     "@chakra-ui/react": "^2.4.9",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@walletconnect/web3wallet": "^1.4.0",
     "@web3modal/ethereum": "^2.1.1",
     "@web3modal/react": "^2.1.1",
     "dotenv": "^16.0.3",
