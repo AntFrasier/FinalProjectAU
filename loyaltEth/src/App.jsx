@@ -1,5 +1,3 @@
-import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
-// dotenv.config();
 import {
   EthereumClient,
   modalConnectors,
@@ -29,7 +27,6 @@ const theme = extendTheme({ colors })
 
 const chains = [goerli];
 const wagmiKey = import.meta.env.VITE_WAGMI_KEY;
-// const wagmiKey = "6b4595a029164e67c18d4f47cb371a9e";
 // Wagmi client
 const { provider } = configureChains(chains, [
   walletConnectProvider({ projectId: wagmiKey }),
