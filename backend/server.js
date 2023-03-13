@@ -19,8 +19,7 @@ app.use(logger);
 app.use(express.json());
 
 //routes :
-
-app.use('/register', require('./routes/register'));
+app.use('/user', require('./routes/user'));
 
 mongoose.connection.once("open", () => {
     console.log("connected to Database");

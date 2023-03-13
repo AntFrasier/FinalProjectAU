@@ -10,13 +10,9 @@ const userSchema = new Schema ( {
         type: String,
         required: true,
     },
-    roles: {
-        User: {
+    role: {
             type: Number,
             default: 1001,
-        },
-        Client: Number,
-        Admin: Number,
     },
     webSite: String,
     signedHash: {
@@ -24,6 +20,6 @@ const userSchema = new Schema ( {
         required: true,
     },
 
-});
+});//
 
 module.exports = mongoose.model('User', userSchema);

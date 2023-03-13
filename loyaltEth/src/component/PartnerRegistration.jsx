@@ -10,15 +10,52 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { Web3Button } from "@web3modal/react";
+import axios from "axios";
+import { useAccount, useSigner } from 'wagmi';
+import { useNavigate } from "react-router-dom";
 
-const PartnerRegistration = () => {
+
+
+const PartnerRegistration = ({backendUrl}) => {
+  const navigate = useNavigate();
   const [active, setActive] = useState('false');
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState();
   const [webSite, setWebSite] = useState();
+  const {address, isConnected} = useAccount();
+  const { data: signer } = useSigner() 
+
 
   async function handleRegister() {
-
+    if (isConnected) {
+    const signature = await signer.signMessage(`${name} ${address}`);
+    console.log(signature);
+    try {
+      // await AccordionButton.
+      await axios.post(backendUrl + "/user", {
+        user : { name : name,
+                 address: address,
+                 role:2002,
+                 website: webSite,
+                 signature: signature,
+      }}).then(response => {
+        console.log(response);
+        localStorage.setItem("user", JSON.stringify(response.data.data));
+        navigate("/user");
+      })
+      
+    } catch(err){
+      switch (err.response.status) {
+        case 409 : 
+          console.log(err.response.data.data)
+          localStorage.setItem("user", JSON.stringify(err.response.data.data))
+          navigate("/user");
+          break;
+        default : console.log("error : ", err );
+      }
+    }
+  }
+  else { alert("Please connect your wallet first")}
   }
 
   useEffect ( () => {
