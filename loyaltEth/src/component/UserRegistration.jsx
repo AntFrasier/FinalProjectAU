@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 
 
 
-const PartnerRegistration = ({backendUrl}) => {
+const UserRegistration = ({backendUrl}) => {
   const navigate = useNavigate();
   const [active, setActive] = useState('false');
   const [loading, setLoading] = useState(false);
@@ -35,8 +35,8 @@ const PartnerRegistration = ({backendUrl}) => {
       await axios.post(backendUrl + "/user", {
         user : { name : name,
                  address: address,
-                 role:2002,
-                 website: webSite,
+                 role:1001,
+                 website: "",
                  signature: signature,
       }}).then(response => {
         console.log(response);
@@ -64,28 +64,16 @@ const PartnerRegistration = ({backendUrl}) => {
   
    return (
     <Flex flexDirection={'column'}>
-      <Heading as="h3" mt={15}>Partner Registration :</Heading>
-      <Text pt={50}>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Perspiciatis quis ad porro deserunt voluptatem voluptatum numquam delectus rem odit nisi, cumque qui sunt quibusdam? Cupiditate iste molestiae obcaecati maiores quaerat.</Text>
+      <Heading as="h3" mt={15}>User Registration :</Heading>
+      <Text pt={50}>Welcome to the user Resitration page. You can register your self to see your accumuluted rewards using the LoyaltEth services !</Text>
       <FormControl maxW={350} alignSelf={"center"}>
-        <FormLabel>Companie/Service Name</FormLabel>
+        <FormLabel>Your Name</FormLabel>
         <Input 
-          placeholder='Service Name' 
+          placeholder='Your Name' 
           type='text' 
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        {/* <FormHelperText>This name will be show to users.</FormHelperText> */}
-        <FormLabel>website url</FormLabel>
-        <InputGroup>
-          <InputLeftAddon children='https://' />
-          <Input 
-            placeholder='mysite' 
-            type={'url'}
-            value={webSite}
-            onChange ={ (e) => setWebSite(e.target.value)}
-          />
-       </InputGroup>
-        {/* <FormHelperText>This name will be show to users.</FormHelperText> */}
         <FormLabel>Connect your Wallet : </FormLabel>
         <Flex justifyContent={'space-between'}>
           <Web3Button icon="hide" balance="hide" /> 
@@ -104,4 +92,4 @@ const PartnerRegistration = ({backendUrl}) => {
   )
 }
 
-export default PartnerRegistration
+export default UserRegistration

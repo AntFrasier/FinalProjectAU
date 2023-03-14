@@ -10,10 +10,10 @@ const Register = () => {
       </div>
       <div>
         <Button mr={35}>
-          <Link to="userRegistration">An User</Link>
+          <Link to="/register/user">An User</Link>
         </Button>
         <Button>
-          <Link to="partnerRegistration">A Partner</Link>
+          <Link to="/register/partner">A Partner</Link>
         </Button>
       </div>
     </Flex>

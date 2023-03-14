@@ -13,9 +13,15 @@ import About from "./pages/About";
 import Header from "./component/Header";
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import PartnerRegistration from "./component/PartnerRegistration";
+import UserRegistration from "./component/UserRegistration";
 import { publicProvider } from 'wagmi/providers/public'
 import User from "./pages/User";
 import axios from "axios";
+import Register from "./pages/Register";
+import { useEffect, useState } from "react";
+import UserComponent from "./component/UserComponent";
+import PartnerComponent from "./component/PartnerComponent";
+import AdminComponent from "./component/AdminComponent";
 
 
 const colors = {
@@ -58,57 +64,84 @@ console.log(wagmiClient)
 
 function App() {
   const navigate = useNavigate();
+  const [registred, setRegistred] = useState(false);
+  const [user, setUser] = useState(null);
 
-  async function getUser(userAddress) {
+  // useEffect( () => {
+  //   setUser(localUser)
+  // }, [localUser])
+
+
+  async function chekUserRegistration(userAddress) {
     try {
-    await axios.get(backendUrl + "/user/" + `${userAddress}`).then(response => {
-      console.log (response)
+      const response = await axios.get(backendUrl + "/user/" + `${userAddress}`)
+      console.log ("response from the backend :",response)
       if (response.status == 200) {
-        let user = response.data.data;
-        //todo test the signature to see if the user has th PK....
-        localStorage.setItem("user", JSON.stringify(user))
-        navigate("/user");
+          let user = response.data.data;
+          //todo test the signature to see if the user has th PK....
+          localStorage.setItem("user", JSON.stringify(user))
+          console.log(account.isConnected)
+          setRegistred(true);
+          setUser(user);
+          // navigate("/user");
       } else {
-        navigate("/");
+          console.log( "not found go to register");
+          setUser(null)
+          setRegistred(false);
+          // navigate("/");
       }
-    }
-    )
     } catch (err) {
       alert(err)
     }
   }
 
   const account = useAccount({
-    onConnect({ address, connector, isReconnected }) {
+    async onConnect({ address, connector, isReconnected }) {
       console.log('Connected', { address, connector, isReconnected });
-      getUser(address)
+      let test = await chekUserRegistration(address);
       //todo check if user present, sign a message then test the message backend side 
       //if user present redirect him to eiter user or partner or admin page
       //if not get him to register page
     },
     onDisconnect() {
-      localStorage.removeItem("user");
       navigate("/");
+      setRegistred(false);
+      localStorage.removeItem("user");
       console.log('Disconnected');
+
     },
   })
+
+  console.log("account : " ,account)
   
    return (
     <>
     <ChakraProvider theme={theme}>
       <WagmiConfig client={wagmiClient}>
       <Header />
-      <Button onClick={() =>  getUser("0x123")}>Test getUser</Button>
+     
       <Box pl={15}>
           <Routes>
-              <Route path="/" element = {<Index />} />
+              <Route path="/" element = {<Index registred={registred}/>}/> 
               <Route path="/about" element = {<About />} />
-              <Route path="/partnerRegistration" element = {<PartnerRegistration backendUrl={backendUrl}/>} />
-              <Route path="/user" element = {<User />} />
+
+              <Route path="/register"  >
+                <Route index element = {<Register />} />
+                <Route path="partner" element = {<PartnerRegistration backendUrl={backendUrl}/>} />
+                <Route path="user" element = {<UserRegistration backendUrl={backendUrl}/>} />
+              </Route>
+
+              <Route path="/user"> 
+                <Route index element = {<User user={user}/>} />
+                <Route path="user" element = {<UserComponent user={user} />} /> 
+                <Route path="partner" element = {<PartnerComponent user={user} />} /> 
+                <Route path="admin" element = {<AdminComponent user={user}/>} /> 
+              </Route>
+
           </Routes>
           <Web3Modal
-          projectId= {wagmiKey}
-          ethereumClient={ethereumClient}
+            projectId= {wagmiKey}
+            ethereumClient={ethereumClient}
           />
         </Box>
       </WagmiConfig>
