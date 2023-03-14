@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import UserComponent from "./component/UserComponent";
 import PartnerComponent from "./component/PartnerComponent";
 import AdminComponent from "./component/AdminComponent";
+import Partners from "./pages/Partners";
 
 
 const colors = {
@@ -100,8 +101,6 @@ function App() {
       console.log('Connected', { address, connector, isReconnected });
       let test = await chekUserRegistration(address);
       //todo check if user present, sign a message then test the message backend side 
-      //if user present redirect him to eiter user or partner or admin page
-      //if not get him to register page
     },
     onDisconnect() {
       navigate("/");
@@ -124,6 +123,7 @@ function App() {
           <Routes>
               <Route path="/" element = {<Index registred={registred}/>}/> 
               <Route path="/about" element = {<About />} />
+              <Route path="/partners" element = {<Partners backendUrl={backendUrl}/>} />
 
               <Route path="/register"  >
                 <Route index element = {<Register />} />

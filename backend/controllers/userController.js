@@ -41,4 +41,29 @@ async function getUser(req, res) {
     }
 
 }
-module.exports = { addNewUser, getUser };
+async function getPartners(req, res) { 
+    
+    try {
+        const partners = await User.find({role : 2002}).exec();
+        console.log(partners)
+       
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({message : `serveur erreur : ${err}`});
+    }
+
+}
+async function getMembers(req, res) { 
+    
+    try {
+        const members = await User.find({role : 1001}).exec();
+        console.log(members)
+        res.status(200).send(members)
+       
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({message : `serveur erreur : ${err}`});
+    }
+
+}
+module.exports = { addNewUser, getUser, getPartners, getMembers };
