@@ -25,7 +25,7 @@ const PartnersList = ({backendUrl}) => {
     return (
         <>
             <List display="flex" gap={3}>
-                {partners?.map( partner => <ListItem w={150} bg="grey" m={1} p={5} borderRadius={"lg"}>{partner.name}</ListItem>) }
+                {partners?.map( partner => <ListItem key={partner.id} w={150} bg="grey" m={1} p={5} borderRadius={"lg"}>{partner.name}</ListItem>) }
             </List>
         </>
     )

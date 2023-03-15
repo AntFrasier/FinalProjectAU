@@ -17,15 +17,14 @@ async function addNewUser(req, res) {
             "webSite" : user.website,
             "signedHash": user.signature,
         })
-
         console.log(result);
         res.status(201).send({message : `New user ${user.address} created.`, data : result});
     } catch (err) {
         console.error(err);
         res.status(500).send({message : `serveur erreur : ${err}`});
     }
-
 }
+
 async function getUser(req, res) { 
     const { id } = req.params; //id stand for address in the params
     console.log(id)
@@ -39,10 +38,9 @@ async function getUser(req, res) {
         console.error(err);
         res.status(500).send({message : `serveur erreur : ${err}`});
     }
-
 }
+
 async function getPartners(req, res) { 
-    
     try {
         const partners = await User.find({role : 2002}).exec();
         console.log(partners)
@@ -52,11 +50,10 @@ async function getPartners(req, res) {
         console.error(err);
         res.status(500).send({message : `serveur erreur : ${err}`});
     }
-
 }
+
 async function getMembers(req, res) { 
-    
-    try {
+        try {
         const members = await User.find({role : 1001}).exec();
         console.log(members)
         res.status(200).send(members)
@@ -65,6 +62,6 @@ async function getMembers(req, res) {
         console.error(err);
         res.status(500).send({message : `serveur erreur : ${err}`});
     }
-
 }
+
 module.exports = { addNewUser, getUser, getPartners, getMembers };

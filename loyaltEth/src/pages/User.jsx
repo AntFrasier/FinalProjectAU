@@ -11,10 +11,10 @@ const User = ({user}) => {
         if(user?.role) {
             switch (user.role) {
                 case 1001 : 
-                    navigate("/user/user");
+                    navigate("/user/member");
                     break;
                 case 2002 : 
-                    navigate("/user/parnter");
+                    navigate("/user/partner");
                     break;
             }
         }

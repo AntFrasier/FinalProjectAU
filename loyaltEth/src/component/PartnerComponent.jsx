@@ -1,14 +1,22 @@
-import { Flex, Heading } from '@chakra-ui/react'
+import { Flex, Heading, Text } from '@chakra-ui/react'
 import React from 'react'
+import Campagns from './Campagns';
 
 const PartnerComponent = ({user}) => {
   
   return (
-    <Flex>
-        <Heading as={"h2"}> Partner Component :</Heading>
-        <Heading as={"h3"}>Welcome {user?.name}</Heading>
-        
-    </Flex>
+    <>
+      <Flex direction={"column"}>
+          <Heading as={"h2"}> Partner administration :</Heading>
+          <Heading mt={5} as={"h3"}>Welcome {user?.name}</Heading>
+          <Text>{user?.webSite}</Text>    
+          
+      </Flex>
+      <Flex direction={"column"}>
+        <Heading as={"h2"}>Your campagns :</Heading>
+        <Campagns />
+      </Flex>
+    </>
   )
 }
 

@@ -9,7 +9,7 @@ const Index = ({registred}) => {
   useEffect( () => { //use a use effect ro avoid bad rendering on first render
     if (isConnected) { 
       if (registred) {
-        navigate("/member")
+        navigate("/user")
         } else {
         navigate("/register")
       }}
