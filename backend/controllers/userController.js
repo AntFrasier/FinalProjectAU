@@ -46,6 +46,7 @@ async function getPartners(req, res) {
     try {
         const partners = await User.find({role : 2002}).exec();
         console.log(partners)
+        res.status(200).send(partners)
        
     } catch (err) {
         console.error(err);
