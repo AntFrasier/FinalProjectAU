@@ -4,12 +4,20 @@ import axios from "axios";
 
 const PartnersList = ({backendUrl}) => {
     const [partners, setPartners] = useState([])
-    async function getPartners (){ //todo add try catch
-        const response = await axios.get(backendUrl + "/user/members")
-        console.log("res from partnerList axios call" , response)
-        setPartners(response.data);
-    }
+  
     useEffect(()=>{
+        const abortController = new AbortController();
+        async function getPartners (){ //todo add try catch
+            console.log("start querying");
+            try {
+                const response = await axios.get(backendUrl + "/user/partners")
+                console.log("res from partnerList axios call" , response)
+                setPartners(response.data);
+            } catch (err) {
+                alert(err);
+            }
+        }
+
         getPartners();
 
     }, [])

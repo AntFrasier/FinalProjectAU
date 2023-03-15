@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
-import UserComponent from '../component/UserComponent';
+import UserComponent from '../component/MemberComponent';
 
 const User = ({user}) => {
     const navigate = useNavigate();

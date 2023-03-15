@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 
 
 
-const UserRegistration = ({backendUrl}) => {
+const MemberRegistration = ({backendUrl}) => {
   const navigate = useNavigate();
   const [active, setActive] = useState('false');
   const [loading, setLoading] = useState(false);
@@ -41,7 +41,7 @@ const UserRegistration = ({backendUrl}) => {
       }}).then(response => {
         console.log(response);
         localStorage.setItem("user", JSON.stringify(response.data.data));
-        navigate("/user");
+        navigate("/member");
       })
       
     } catch(err){
@@ -49,7 +49,7 @@ const UserRegistration = ({backendUrl}) => {
         case 409 : 
           console.log(err.response.data.data)
           localStorage.setItem("user", JSON.stringify(err.response.data.data))
-          navigate("/user");
+          navigate("/member");
           break;
         default : console.log("error : ", err );
       }
@@ -64,8 +64,8 @@ const UserRegistration = ({backendUrl}) => {
   
    return (
     <Flex flexDirection={'column'}>
-      <Heading as="h3" mt={15}>User Registration :</Heading>
-      <Text pt={50}>Welcome to the user Resitration page. You can register your self to see your accumuluted rewards using the LoyaltEth services !</Text>
+      <Heading as="h3" mt={15}>Member Registration :</Heading>
+      <Text pt={50}>Welcome to the member Resitration page. You can register your self to see your accumuluted rewards using the LoyaltEth services !</Text>
       <FormControl maxW={350} alignSelf={"center"}>
         <FormLabel>Your Name</FormLabel>
         <Input 
@@ -92,4 +92,4 @@ const UserRegistration = ({backendUrl}) => {
   )
 }
 
-export default UserRegistration
+export default MemberRegistration

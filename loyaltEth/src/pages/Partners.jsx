@@ -1,7 +1,6 @@
-import { Box, Heading } from '@chakra-ui/react'
-import React from 'react'
-import HeroText from '../component/HeroText'
-import PartnersList from '../component/PartnersList'
+import { Box, Heading } from '@chakra-ui/react';
+import React from 'react';
+import PartnersList from '../component/PartnersList';
 
 const Partners = ({backendUrl}) => {
   return (

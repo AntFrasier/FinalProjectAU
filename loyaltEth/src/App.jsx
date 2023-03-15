@@ -13,13 +13,13 @@ import About from "./pages/About";
 import Header from "./component/Header";
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import PartnerRegistration from "./component/PartnerRegistration";
-import UserRegistration from "./component/UserRegistration";
+import MemberRegistration from "./component/MemberRegistration";
 import { publicProvider } from 'wagmi/providers/public'
 import User from "./pages/User";
 import axios from "axios";
 import Register from "./pages/Register";
 import { useEffect, useState } from "react";
-import UserComponent from "./component/UserComponent";
+import MemberComponent from "./component/MemberComponent";
 import PartnerComponent from "./component/PartnerComponent";
 import AdminComponent from "./component/AdminComponent";
 import Partners from "./pages/Partners";
@@ -128,12 +128,12 @@ function App() {
               <Route path="/register"  >
                 <Route index element = {<Register />} />
                 <Route path="partner" element = {<PartnerRegistration backendUrl={backendUrl}/>} />
-                <Route path="user" element = {<UserRegistration backendUrl={backendUrl}/>} />
+                <Route path="member" element = {<MemberRegistration backendUrl={backendUrl}/>} />
               </Route>
 
               <Route path="/user"> 
                 <Route index element = {<User user={user}/>} />
-                <Route path="user" element = {<UserComponent user={user} />} /> 
+                <Route path="member" element = {<MemberComponent user={user} />} /> 
                 <Route path="partner" element = {<PartnerComponent user={user} />} /> 
                 <Route path="admin" element = {<AdminComponent user={user}/>} /> 
               </Route>
