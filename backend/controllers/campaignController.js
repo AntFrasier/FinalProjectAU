@@ -3,6 +3,29 @@ const Campaign = require("../model/Campaign");
 
 //todo add protection to conncted users
 
+// @desc Get all campaigns ONLY ADMIN SHOULD SEE THAT
+// @route Get /campaign/all
+async function getAll (req, res) {
+    try {
+    const campaigns = await Campaign.find().exec();
+    } catch (err) {
+        res.status(500).send({message : `serveur erreur : ${err}`})
+    }
+}
+
+// @desc Get campaigns from a spécific partners
+// @route Get /campaign/partner/:id
+async function getPartnersCampaigns (req, res) {
+    const { id } = req.params
+    const existUser = await User.findOne({address : id}).exec();
+    try {
+    const campaigns = await Campaign.find({user : existUser}).exec();
+    } catch (err) {
+        res.status(500).send({message : `serveur erreur : ${err}`})
+    }
+}
+
+
 // @desc Create a campaign
 // @route Post /campaign
 async function createCampaign(req, res) {
@@ -41,4 +64,4 @@ async function createCampaign(req, res) {
    
 }
 
-module.exports = { createCampaign };
+module.exports = { createCampaign, getAll, getPartnersCampaigns };

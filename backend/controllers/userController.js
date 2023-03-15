@@ -1,5 +1,8 @@
 const User = require("../model/User");
 
+
+// @desc post new user 
+// @route Post /user
 async function addNewUser(req, res) {
     const { user } = req.body;
     if (!user) return res.status(400).send({message : "user Required"});
@@ -25,6 +28,8 @@ async function addNewUser(req, res) {
     }
 }
 
+// @desc Get a specific User 
+// @route Post /user/:id
 async function getUser(req, res) { 
     const { id } = req.params; //id stand for address in the params
     console.log(id)
@@ -40,6 +45,8 @@ async function getUser(req, res) {
     }
 }
 
+// @desc Get all users whith partners role 
+// @route Post /user/partners
 async function getPartners(req, res) { 
     try {
         const partners = await User.find({role : 2002}).exec();
@@ -52,6 +59,8 @@ async function getPartners(req, res) {
     }
 }
 
+// @desc Get all users whith members role 
+// @route Post /user/members
 async function getMembers(req, res) { 
         try {
         const members = await User.find({role : 1001}).exec();

@@ -7,4 +7,4 @@ router.get('/partners', userController.getPartners);
 router.get('/members', userController.getMembers);
 router.get('/:id', userController.getUser);
 
-module.exports = router; //
+module.exports = router; 
