@@ -20,6 +20,7 @@ app.use(express.json());
 
 //routes :
 app.use('/user', require('./routes/user'));
+app.use('/campaign', require('./routes/campaign'));
 
 mongoose.connection.once("open", () => {
     console.log("connected to Database");
