@@ -2,7 +2,7 @@
 
 # LoyaltEth Project :
 
-This project will be an interface for other projects or services to allow theme to get engagement to their service via loyalies card represented whith an NFT.
+This project will be an interface for other projects or services to allow theme to get engagement to their service via loyalties card represented whith an NFT.
 
 # Stack :
 Vite
