@@ -6,7 +6,7 @@ import {
 import { Box, Button, ChakraProvider } from '@chakra-ui/react';
 import { extendTheme } from '@chakra-ui/react';
 import { Web3Modal, Web3Button } from "@web3modal/react";
-import { configureChains, createConfig, WagmiConfig } from "wagmi";
+import { configureChains, createConfig, WagmiConfig, useAccount } from "wagmi";
 import { goerli } from "wagmi/chains";
 
 import Index from "./pages/Index";
@@ -36,20 +36,11 @@ const colors = {
 
 const theme = extendTheme({ colors })
 
-const chains = [goerli];
 
-const projectId = '34a5caafeb6d780a6b52114437dd57b6'
-
-const { publicClient } = configureChains(chains, [w3mProvider({ projectId })])
-const wagmiConfig = createConfig({
-  autoConnect: true,
-  connectors: w3mConnectors({ projectId, chains }),
-  publicClient
-})
-const ethereumClient = new EthereumClient(wagmiConfig, chains)
 const wagmiKey = import.meta.env.VITE_WAGMI_KEY;
 const w3ModalProjectId = import.meta.env.VITE_W3MODAL_PROJECT_ID;
-const backendUrl = import.meta.env.VITE_BACKEND_ADDRESS;
+const backendUrl = import.meta.env.VITE_BACKEND_ADDRESS || "//localhost:33550";
+console.log(backendUrl)
 
 // Wagmi client
 // const { provider } = configureChains(chains, [
@@ -69,7 +60,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_ADDRESS;
 // // Web3Modal Ethereum Client
 // const ethereumClient = new EthereumClient(wagmiClient, chains);
 
-console.log(publicClient)
+// console.log(publicClient)
 function App() {
   const navigate = useNavigate();
   const [registred, setRegistred] = useState(false);
@@ -103,10 +94,12 @@ function App() {
     }
   }
 
+  // const { address, isConnecting, isDisconnected } = useAccount();
+
   const account = useAccount({
-    async onConnect({ address, connector, isReconnected }) {
+    onConnect({ address, connector, isReconnected }) {
       console.log('Connected', { address, connector, isReconnected });
-      let test = await chekUserRegistration(address);
+      let test = chekUserRegistration(address);
       //todo check if user present, sign a message then test the message backend side 
     },
     onDisconnect() {
@@ -123,7 +116,7 @@ function App() {
    return (
     <>
     <ChakraProvider theme={theme}>
-      <WagmiConfig config={wagmiConfig}>
+      
       <Header />
      
       <Box pl={15}>
@@ -146,12 +139,8 @@ function App() {
               </Route>
 
           </Routes>
-          <Web3Modal
-          projectId= {projectId}
-          ethereumClient={ethereumClient}
-          />
+         
         </Box>
-      </WagmiConfig>
     </ChakraProvider>
   </>
   )
