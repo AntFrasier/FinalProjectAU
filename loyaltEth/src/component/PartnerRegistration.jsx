@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { Web3Button } from "@web3modal/react";
 import axios from "axios";
-import { useAccount, useSigner } from 'wagmi';
+import { useAccount, useWalletClient, useSignMessage  } from 'wagmi';
 import { useNavigate } from "react-router-dom";
 
 
@@ -23,13 +23,18 @@ const PartnerRegistration = ({backendUrl}) => {
   const [name, setName] = useState();
   const [webSite, setWebSite] = useState();
   const {address, isConnected} = useAccount();
-  const { data: signer } = useSigner() 
+  const { data: signer } = useWalletClient();
+  const { data, isError, isLoading, isSuccess, signMessageAsync } = useSignMessage()
+
 
 
   async function handleRegister() {
     if (isConnected) {
-    const signature = await signer.signMessage(`${name} ${address}`);
-    console.log(signature);
+      console.log("the signer is : ",signer)
+      
+    // const signMessage = await signer.signMessage(`${name} ${address}`);
+    const signedMessage =  await signMessageAsync({message : `${name} ${address}`});
+    console.log(signedMessage);
     try {
       // await AccordionButton.
       await axios.post(backendUrl + "/user", {
@@ -37,7 +42,7 @@ const PartnerRegistration = ({backendUrl}) => {
                  address: address,
                  role:2002,
                  website: webSite,
-                 signature: signature,
+                 signature: signedMessage,
       }}).then(response => {
         console.log(response);
         localStorage.setItem("user", JSON.stringify(response.data.data));
@@ -45,6 +50,7 @@ const PartnerRegistration = ({backendUrl}) => {
       })
       
     } catch(err){
+      console.log(err)
       switch (err.response.status) {
         case 409 : 
           console.log(err.response.data.data)

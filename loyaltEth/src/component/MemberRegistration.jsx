@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { Web3Button } from "@web3modal/react";
 import axios from "axios";
-import { useAccount, useSigner } from 'wagmi';
+import { useAccount, useWalletClient } from 'wagmi';
 import { useNavigate } from "react-router-dom";
 
 
@@ -23,7 +23,7 @@ const MemberRegistration = ({backendUrl}) => {
   const [name, setName] = useState();
   const [webSite, setWebSite] = useState();
   const {address, isConnected} = useAccount();
-  const { data: signer } = useSigner() 
+  const { data: signer } = useWalletClient() 
 
 
   async function handleRegister() {
