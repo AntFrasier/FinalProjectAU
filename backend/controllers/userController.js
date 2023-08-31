@@ -3,7 +3,7 @@ const User = require("../model/User");
 
 // @desc post new user 
 // @route Post /user
-async function addNewUser(req, res) {
+async function RegisterUser(req, res) {
     const { user } = req.body;
     if (!user) return res.status(400).send({message : "user Required"});
     //chek if user allready exist
@@ -90,4 +90,4 @@ async function deleteUser(req, res) {
     }
 }
 
-module.exports = { addNewUser, getUser, getPartners, getMembers, deleteUser };
+module.exports = { RegisterUser, getUser, getPartners, getMembers, deleteUser };
