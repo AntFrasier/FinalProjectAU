@@ -82,12 +82,12 @@ function App() {
           console.log(account.isConnected)
           setRegistred(true);
           setUser(user);
-          // navigate("/user");
+          navigate("/user");
       } else {
           console.log( "not found go to register");
           setUser(null)
           setRegistred(false);
-          // navigate("/");
+          navigate("/");
       }
     } catch (err) {
       alert(err)
