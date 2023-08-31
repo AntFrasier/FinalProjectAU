@@ -12,11 +12,12 @@ async function addNewUser(req, res) {
          res.status(409).send({message: "user already exist", data : existUser});
          return;
     }
+    console.log("the user to register in Db is : ", user);
     try {
         const result = await User.create ({
             "name": user.name,
             "address" : user.address,
-            "roles" : user.role,
+            "role" : user.role,
             "webSite" : user.website,
             "signedHash": user.signature,
         })
@@ -78,7 +79,7 @@ async function deleteUser(req, res) {
     console.log(id)
     try {
         const userDeleted = await User.findOneAndDelete({address : id}).exec();
-        if (existUser) {
+        if (userDeleted) {
         console.log(userDeleted)
          res.status(200).send({message: "user deleted !", data : userDeleted});
          return;
