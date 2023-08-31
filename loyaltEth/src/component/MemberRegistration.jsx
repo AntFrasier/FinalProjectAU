@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { Web3Button } from "@web3modal/react";
 import axios from "axios";
-import { useAccount, useWalletClient } from 'wagmi';
+import { useAccount, useWalletClient, useSignMessage } from 'wagmi';
 import { useNavigate } from "react-router-dom";
 
 
@@ -23,12 +23,13 @@ const MemberRegistration = ({backendUrl}) => {
   const [name, setName] = useState();
   const [webSite, setWebSite] = useState();
   const {address, isConnected} = useAccount();
-  const { data: signer } = useWalletClient() 
+  const { data: signer } = useWalletClient();
+  const { data, isError, isLoading, isSuccess, signMessageAsync } = useSignMessage()
 
 
   async function handleRegister() {
     if (isConnected) {
-    const signature = await signer.signMessage(`${name} ${address}`);
+    const signature = await signMessageAsync({ message :`${name} ${address}`});
     console.log(signature);
     try {
       // await AccordionButton.
@@ -41,7 +42,7 @@ const MemberRegistration = ({backendUrl}) => {
       }}).then(response => {
         console.log(response);
         localStorage.setItem("user", JSON.stringify(response.data.data));
-        navigate("/member");
+        navigate("/user");
       })
       
     } catch(err){
@@ -49,7 +50,7 @@ const MemberRegistration = ({backendUrl}) => {
         case 409 : 
           console.log(err.response.data.data)
           localStorage.setItem("user", JSON.stringify(err.response.data.data))
-          navigate("/member");
+          navigate("/user");
           break;
         default : console.log("error : ", err );
       }
