@@ -73,4 +73,20 @@ async function getMembers(req, res) {
     }
 }
 
-module.exports = { addNewUser, getUser, getPartners, getMembers };
+async function deleteUser(req, res) {
+    const { id } = req.params; //id stand for address in the params
+    console.log(id)
+    try {
+        const userDeleted = await User.findOneAndDelete({address : id}).exec();
+        if (existUser) {
+        console.log(userDeleted)
+         res.status(200).send({message: "user deleted !", data : userDeleted});
+         return;
+        } else res.status(204).send({message: "no user found"})
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({message : `serveur erreur : ${err}`});
+    }
+}
+
+module.exports = { addNewUser, getUser, getPartners, getMembers, deleteUser };
