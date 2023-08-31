@@ -10,7 +10,7 @@ const Register = () => {
       </div>
       <div>
         <Button mr={35}>
-          <Link to="/register/user">An User</Link>
+          <Link to="/register/member">An User</Link>
         </Button>
         <Button>
           <Link to="/register/partner">A Partner</Link>
