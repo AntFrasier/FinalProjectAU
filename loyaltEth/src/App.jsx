@@ -24,6 +24,7 @@ import MemberComponent from "./component/MemberComponent";
 import PartnerComponent from "./component/PartnerComponent";
 import AdminComponent from "./component/AdminComponent";
 import Partners from "./pages/Partners";
+import Admin from "./pages/Admin";
 
 
 const colors = {
@@ -32,6 +33,10 @@ const colors = {
     800: '#153e75',
     700: '#2a69ac',
   },
+  grey: {
+    50: "#f7fafc",
+  },
+  bgTrans: "rgba(0,0,0,0.5)"
 }
 
 const theme = extendTheme({ colors })
@@ -135,7 +140,7 @@ function App() {
                 <Route index element = {<User user={user}/>} />
                 <Route path="member" element = {<MemberComponent user={user} />} /> 
                 <Route path="partner" element = {<PartnerComponent user={user} />} /> 
-                <Route path="admin" element = {<AdminComponent user={user}/>} /> 
+                <Route path="admin" element = {<Admin user={user} backendUrl={backendUrl}/>} /> 
               </Route>
 
           </Routes>

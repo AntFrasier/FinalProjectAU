@@ -9,14 +9,14 @@ import {
   w3mConnectors,
   w3mProvider ,
 } from "@web3modal/ethereum";
-import { configureChains, createConfig, WagmiConfig, useAccount } from "wagmi";
+import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { goerli } from "wagmi/chains";
-import { Web3Modal, Web3Button } from "@web3modal/react";
+import { Web3Modal } from "@web3modal/react";
 
 
 const chains = [goerli];
 
-const projectId = '34a5caafeb6d780a6b52114437dd57b6'
+const projectId = '34a5caafeb6d780a6b52114437dd57b6' //todo move it to env variables.
 
 const { publicClient } = configureChains(chains, [w3mProvider({ projectId })])
 const wagmiConfig = createConfig({
@@ -25,6 +25,7 @@ const wagmiConfig = createConfig({
   publicClient
 })
 const ethereumClient = new EthereumClient(wagmiConfig, chains);
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

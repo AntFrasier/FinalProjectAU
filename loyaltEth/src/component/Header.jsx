@@ -1,6 +1,7 @@
 import { Web3Button } from "@web3modal/react";
 import { Box, Heading } from "@chakra-ui/react";
 import { Link } from 'react-router-dom';
+import React from "react";
 
 
 export default function Header(){
@@ -13,7 +14,7 @@ return (
                 <Heading as='h1'>LoyaltEth</Heading>
             </Link>
             <Box display="flex" alignItems="center" justifyContent="space-between" gap={10} pl={10}>
-                <Link to="/about" boxShadow="1px solid black" cursor="pointer">
+                <Link to="/about" cursor="pointer">
                     About
                 </Link>
                 <Link to="/partners" boxShadow="1px solid black" cursor="pointer">

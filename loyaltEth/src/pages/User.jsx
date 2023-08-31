@@ -16,6 +16,9 @@ const User = ({user}) => {
                 case 2002 : 
                     navigate("/user/partner");
                     break;
+                case 3003 : 
+                    navigate("/user/admin");
+                    break;
             }
         }
     },[user])
