@@ -19,6 +19,7 @@ app.use(logger);
 app.use(express.json());
 
 //routes :
+app.use('/login', require('./routes/login'))
 app.use('/user', require('./routes/userRoutes'));
 app.use('/campaign', require('./routes/campaignRoutes'));
 

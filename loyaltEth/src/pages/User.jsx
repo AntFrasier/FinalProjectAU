@@ -2,14 +2,14 @@ import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import UserComponent from '../component/MemberComponent';
 
-const User = ({user}) => {
+const User = ({connectedUser}) => {
     const navigate = useNavigate();
-    console.log("user in the user page : ", user);
+    console.log("user in the user page : ", connectedUser);
 
     useEffect ( () => {
         
-        if(user?.role) {
-            switch (user.role) {
+        if(connectedUser?.role) {
+            switch (connectedUser.role) {
                 case 1001 : 
                     navigate("/user/member");
                     break;
@@ -21,7 +21,7 @@ const User = ({user}) => {
                     break;
             }
         }
-    },[user])
+    },[connectedUser])
     
     return (
         <div>Not connected</div>

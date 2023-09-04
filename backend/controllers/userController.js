@@ -46,6 +46,24 @@ async function getUser(req, res) {
     }
 }
 
+// @desc Get a specific User nonce
+// @route Post /user/nonce/:id
+async function getNonce(req, res) {
+    const { id } = req.params; //id stand for address in the params
+    console.log("try to reach the nonce" , id)
+    try {
+        const existUser = await User.findOne({address : id}).exec();
+        console.log("do i find the user here ?", existUser)
+        if (existUser) {
+            return res.status(200).send({message: "user exist", data : existUser.nonce});
+         
+        } else return res.status(204).send({message: "no user found"})
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send({message : `serveur erreur : ${err}`});
+    }
+}
+
 // @desc Get all users whith partners role 
 // @route Post /user/partners
 async function getPartners(req, res) { 
@@ -90,4 +108,4 @@ async function deleteUser(req, res) {
     }
 }
 
-module.exports = { RegisterUser, getUser, getPartners, getMembers, deleteUser };
+module.exports = { RegisterUser, getUser, getPartners, getMembers, deleteUser, getNonce };

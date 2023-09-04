@@ -6,7 +6,7 @@ import {
 import { Box, Button, ChakraProvider } from '@chakra-ui/react';
 import { extendTheme } from '@chakra-ui/react';
 import { Web3Modal, Web3Button } from "@web3modal/react";
-import { configureChains, createConfig, WagmiConfig, useAccount } from "wagmi";
+import { configureChains, createConfig, WagmiConfig, useAccount, useSignMessage } from "wagmi";
 import { goerli } from "wagmi/chains";
 
 import Index from "./pages/Index";
@@ -27,6 +27,7 @@ import Partners from "./pages/Partners";
 import Admin from "./pages/Admin";
 
 
+
 const colors = {
   brand: {
     900: '#1a365d',
@@ -41,83 +42,96 @@ const colors = {
 
 const theme = extendTheme({ colors })
 
-
 const wagmiKey = import.meta.env.VITE_WAGMI_KEY;
 const w3ModalProjectId = import.meta.env.VITE_W3MODAL_PROJECT_ID;
 const backendUrl = import.meta.env.VITE_BACKEND_ADDRESS || "//localhost:33550";
-console.log(backendUrl)
 
-// Wagmi client
-// const { provider } = configureChains(chains, [
-//   walletConnectProvider({ projectId: wagmiKey }),
-// ]);
-// const wagmiClient = createClient({ //
-//   autoConnect: true,
-//   connectors: modalConnectors({
-//     projectId: "",
-//     version: "1" | "2",
-//     appName: "web3Modal",
-//     chains,
-//   }),
-//   provider,
-// });
-
-// // Web3Modal Ethereum Client
-// const ethereumClient = new EthereumClient(wagmiClient, chains);
-
-// console.log(publicClient)
 function App() {
+  const { data, isError, isLoading, isSuccess, signMessageAsync } = useSignMessage()
   const navigate = useNavigate();
   const [registred, setRegistred] = useState(false);
-  const [user, setUser] = useState(null);
+  const [connectedUser, setConnectedUser] = useState();
 
-  // useEffect( () => {
-  //   setUser(localUser)
-  // }, [localUser])
+  async function getSigneMessage(userAddress) {
+    const nonce = await axios.get(backendUrl + `/user/nonce/${userAddress}`)
+    console.log("nonce : ", nonce.data.data)
+    return await signMessageAsync({ message :`Login to LoyaltEth/${userAddress}/${nonce.data.data}`});
+  }
 
-
-  async function chekUserRegistration(userAddress) {
+  async function login(userAddress) {
     try {
-      const response = await axios.get(backendUrl + "/user/" + `${userAddress}`)
-      console.log ("response from the backend :",response)
-      if (response.status == 200) {
-          let user = response.data.data;
-          //todo test the signature to see if the user has th PK....
-          localStorage.setItem("user", JSON.stringify(user))
-          console.log(account.isConnected)
-          setRegistred(true);
-          setUser(user);
-          navigate("/user");
-      } else {
-          console.log( "not found go to register");
-          setUser(null)
-          setRegistred(false);
-          navigate("/");
-      }
+      const userSignature = await getSigneMessage(userAddress)
+      console.log("userSignature", userSignature)
+      const response = await axios.post(backendUrl + "/login/" , {
+        address : userAddress,
+        signature :userSignature
+      }).then( (response) => {
+        console.log ("response from the login backend :",response);
+        if (response.status == 200) {
+            let user = response.data.data;
+            localStorage.setItem("connectedUser", JSON.stringify(user))
+            setRegistred(true);
+            setConnectedUser(user);
+            navigate("/user");
+            //todo manage a connection not allready register
+        } else {
+            console.log( "not found go to register");
+            setConnectedUser(null)
+            setRegistred(false);
+            navigate("/register");
+        }
+      })
     } catch (err) {
       alert(err)
     }
   }
 
-  // const { address, isConnecting, isDisconnected } = useAccount();
+ 
 
   const account = useAccount({
+    
+    onDisconnect() { //BUG this is not trigger some times .... why ??????? It seems that if i save app.jsx and not reload the page it is not triger
+      console.log('****************************Disconnected********************************');
+      navigate("/home");
+      setRegistred(false);
+      //todo remove token front and back
+      localStorage.removeItem("connectedUser");
+   },
     onConnect({ address, connector, isReconnected }) {
       console.log('Connected', { address, connector, isReconnected });
-      let test = chekUserRegistration(address);
+      if (isReconnected) {
+        setConnectedUser(JSON.parse( localStorage.getItem("connectedUser")));
+      } else {
+        login(address);
+      }
       //todo check if user present, sign a message then test the message backend side 
-    },
-    onDisconnect() {
-      navigate("/");
-      setRegistred(false);
-      localStorage.removeItem("user");
-      console.log('Disconnected');
 
     },
+    
+   
   })
+  // const isDeconnected = useAccount( {
+  //   onDisconnect() { //BUG this is not trigger some times .... why ???????
+  //     console.log('****************************Disconnected********************************');
+  //     navigate("/home");
+  //     setRegistred(false);
+  //     //todo remove token front and back
+  //     localStorage.removeItem("user");
 
-  console.log("account : " ,account)
+
+  //   },
+  // })
+
+  useEffect( () => {
+    console.log("****************************** connection status changed :", account.status); //the disconnected status doesnt appears some times that wired ....
+   
   
+  },[account])
+
+  useEffect( () => {
+    console.log("user changed", connectedUser);
+  }, [connectedUser])
+
    return (
     <>
     <ChakraProvider theme={theme}>
@@ -126,7 +140,7 @@ function App() {
      
       <Box pl={15}>
           <Routes>
-              <Route path="/" element = {<Index registred={registred}/>}/> 
+              <Route path="/home" element = {<Index registred={registred}/>}/> 
               <Route path="/about" element = {<About />} />
               <Route path="/partners" element = {<Partners backendUrl={backendUrl}/>} />
 
@@ -137,10 +151,10 @@ function App() {
               </Route>
 
               <Route path="/user"> 
-                <Route index element = {<User user={user}/>} />
-                <Route path="member" element = {<MemberComponent user={user} />} /> 
-                <Route path="partner" element = {<PartnerComponent user={user} />} /> 
-                <Route path="admin" element = {<Admin user={user} backendUrl={backendUrl}/>} /> 
+                <Route index element = {<User connectedUser={connectedUser}/>} />
+                <Route path="member" element = {<MemberComponent connectedUser={connectedUser} />} /> 
+                <Route path="partner" element = {<PartnerComponent connectedUser={connectedUser} />} /> 
+                <Route path="admin" element = {<Admin connectedUser={connectedUser} backendUrl={backendUrl}/>} /> 
               </Route>
 
           </Routes>

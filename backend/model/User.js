@@ -19,6 +19,10 @@ const userSchema = new Schema ( {
         type: String,
         required: true,
     },
+    nonce: {
+        type: Number,
+        default: 0
+    },
 
 });//
 

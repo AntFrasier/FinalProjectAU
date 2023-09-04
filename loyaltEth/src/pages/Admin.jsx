@@ -5,7 +5,7 @@ import UsersList from '../component/UsersList';
 import axios from "axios";
 
 
-const Admin = ({backendUrl, user}) => {
+const Admin = ({backendUrl, connectedUser}) => {
     const [partners, setPartners] = useState([]);
     const [users, setUsers] = useState([]);
     const [refresh, setRefresh] = useState(false);
@@ -31,14 +31,14 @@ const Admin = ({backendUrl, user}) => {
 
   return (
     <Box>
-        <Heading as={"h2"} mb={"5"}> Administration {user?.name} :</Heading>
+        <Heading as={"h2"} mb={"5"}> Administration {connectedUser?.name} :</Heading>
         <Flex>
         <Box bg={"blue.100"}> 
             Menu
         </Box>
         <Box>
             <Heading as={"h3"} mb={"3"}>Partners</Heading>
-            <Table variant='striped'>
+            <Table key={"id1"} variant='striped'>
                 <TableCaption>Manage Partners</TableCaption>
                 <Thead>
                     <Tr>
@@ -46,14 +46,14 @@ const Admin = ({backendUrl, user}) => {
                         <Th>Address</Th>
                         <Th>WebSite</Th>
                         <Th>Role</Th>
-                        {user?.role == 3003? <Th>modifie</Th> : null}
+                        {connectedUser?.role == 3003? <Th>modifie</Th> : null}
                     </Tr>
                 </Thead>
                 <Tbody>
                     <PartnersList 
                         setRefresh={setRefresh} 
                         partners={partners} 
-                        connectedUser={user} 
+                        connectedUser={connectedUser} 
                         backendUrl={backendUrl}
                     />   
                 </Tbody>
@@ -63,13 +63,13 @@ const Admin = ({backendUrl, user}) => {
                         <Th>Address</Th>
                         <Th>WebSite</Th>
                         <Th>Role</Th>
-                        {user?.role == 3003? <Th>modifie</Th> : null}
+                        {connectedUser?.role == 3003? <Th>modifie</Th> : null}
                     </Tr>
                 </Tfoot>
             </Table>
             
             <Heading as={"h3"} mb={"3"}>Users</Heading>
-            <Table variant='striped'>
+            <Table key={"id2"} variant='striped'>
                 <TableCaption>Manage Partners</TableCaption>
                 <Thead>
                     <Tr>
@@ -77,14 +77,14 @@ const Admin = ({backendUrl, user}) => {
                         <Th>Address</Th>
                         <Th>WebSite</Th>
                         <Th>Role</Th>
-                        {user?.role == 3003? <Th>modifie</Th> : null}
+                        {connectedUser?.role == 3003? <Th>modifie</Th> : null}
                     </Tr>
                 </Thead>
                 <Tbody>
                     <PartnersList 
                         setRefresh={setRefresh} 
                         partners={users} 
-                        connectedUser={user}
+                        connectedUser={connectedUser}
                         backendUrl={backendUrl}
                     />   
                 </Tbody>
@@ -94,7 +94,7 @@ const Admin = ({backendUrl, user}) => {
                         <Th>Address</Th>
                         <Th>WebSite</Th>
                         <Th>Role</Th>
-                        {user?.role == 3003? <Th>modifie</Th> : null}
+                        {connectedUser?.role == 3003? <Th>modifie</Th> : null}
                     </Tr>
                 </Tfoot>
             </Table>

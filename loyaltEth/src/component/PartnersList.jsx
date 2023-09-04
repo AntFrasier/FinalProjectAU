@@ -3,26 +3,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 const PartnersList = ({setRefresh, partners, connectedUser, backendUrl}) => {
-    //const [partners, setPartners] = useState([]);
     const [addressToDelete, setAddressTodelete] = useState();
     const [modal, setModal] = useState(false);
-  
-    // useEffect(()=>{
-    //     const abortController = new AbortController(); // finish the protect call to api
-    //     async function getPartners (){ 
-    //         console.log("start querying");
-    //         try {
-    //             const response = await axios.get(backendUrl + "/user/partners")
-    //             console.log("res from partnerList axios call" , response)
-    //             setPartners(response.data);
-    //         } catch (err) {
-    //             alert(err);
-    //         }
-    //     }
-
-    //     getPartners();
-
-    // }, [refresh])
 
     const deletePartner = async (address) => {
          try {
@@ -61,12 +43,12 @@ const PartnersList = ({setRefresh, partners, connectedUser, backendUrl}) => {
         <>
                 
                 {partners?.map( partner => 
-                <Tr>
-                    <Td>{partner.name} </Td>
-                    <Td>{partner.address}</Td>
-                    <Td>{partner.webSite}</Td>
-                    <Td>{partner.role}</Td>
-                    <Td>{connectedUser?.role == 3003 ? <Button onClick={ () => manageDelete(partner.address)}> delete</Button> : null}</Td>
+                <Tr key={partner.id}>
+                    <Td key={`${partner.id}name`}>{partner.name} </Td>
+                    <Td key={`${partner.id}add`}>{partner.address}</Td>
+                    <Td key={`${partner.id}web`}>{partner.webSite}</Td>
+                    <Td key={`${partner.id}role`}>{partner.role}</Td>
+                    <Td key={`${partner.id}delete`}>{connectedUser?.role == 3003 ? <Button onClick={ () => manageDelete(partner.address)}> delete</Button> : null}</Td>
                 </Tr>
                 ) }
             {modal? <Modal /> : null }
