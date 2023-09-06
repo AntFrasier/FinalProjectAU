@@ -8,7 +8,7 @@ import { extendTheme } from '@chakra-ui/react';
 import { Web3Modal, Web3Button } from "@web3modal/react";
 import { configureChains, createConfig, WagmiConfig, useAccount, useSignMessage } from "wagmi";
 import { goerli } from "wagmi/chains";
-
+import useAuth from './hooks/useAuth';
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Header from "./component/Header";
@@ -17,7 +17,7 @@ import PartnerRegistration from "./component/PartnerRegistration";
 import MemberRegistration from "./component/MemberRegistration";
 import { publicProvider } from 'wagmi/providers/public'
 import User from "./pages/User";
-import axios from "axios";
+import axios from "./api/axios";
 import Register from "./pages/Register";
 import { useEffect, useState } from "react";
 import MemberComponent from "./component/MemberComponent";
@@ -51,9 +51,10 @@ function App() {
   const navigate = useNavigate();
   const [registred, setRegistred] = useState(false);
   const [connectedUser, setConnectedUser] = useState();
+  const { setAuth } = useAuth();
 
   async function getSigneMessage(userAddress) {
-    const nonce = await axios.get(backendUrl + `/user/nonce/${userAddress}`)
+    const nonce = await axios.get(`/user/nonce/${userAddress}`) //get nonce from the back end to avoid duplicate signature loggIn
     console.log("nonce : ", nonce.data.data)
     return await signMessageAsync({ message :`Login to LoyaltEth/${userAddress}/${nonce.data.data}`});
   }
@@ -62,16 +63,20 @@ function App() {
     try {
       const userSignature = await getSigneMessage(userAddress)
       console.log("userSignature", userSignature)
-      const response = await axios.post(backendUrl + "/login/" , {
+      const response = await axios.post("/login/" , {
         address : userAddress,
         signature :userSignature
-      }).then( (response) => {
+      }).then( (response, cookie) => {
         console.log ("response from the login backend :",response);
+        console.log ("cookie from the login backend :",cookie);
         if (response.status == 200) {
             let user = response.data.data;
+            let cookie = response.data.cookie
             localStorage.setItem("connectedUser", JSON.stringify(user))
             setRegistred(true);
-            setConnectedUser(user);
+            setAuth({user});
+            
+            //setConnectedUser(user);
             navigate("/user");
             //todo manage a connection not allready register
         } else {
@@ -94,13 +99,18 @@ function App() {
       console.log('****************************Disconnected********************************');
       navigate("/home");
       setRegistred(false);
+      setAuth(null);
+      
       //todo remove token front and back
       localStorage.removeItem("connectedUser");
    },
     onConnect({ address, connector, isReconnected }) {
       console.log('Connected', { address, connector, isReconnected });
       if (isReconnected) {
-        setConnectedUser(JSON.parse( localStorage.getItem("connectedUser")));
+        const connectedUser = JSON.parse( localStorage.getItem("connectedUser"))
+        setAuth({user : connectedUser});
+        console.log("allready connected");
+        // setAuth(auth.auth.user);
       } else {
         login(address);
       }
@@ -142,19 +152,19 @@ function App() {
           <Routes>
               <Route path="/home" element = {<Index registred={registred}/>}/> 
               <Route path="/about" element = {<About />} />
-              <Route path="/partners" element = {<Partners backendUrl={backendUrl}/>} />
+              <Route path="/partners" element = {<Partners />} />
 
               <Route path="/register"  >
                 <Route index element = {<Register />} />
-                <Route path="partner" element = {<PartnerRegistration backendUrl={backendUrl}/>} />
-                <Route path="member" element = {<MemberRegistration backendUrl={backendUrl}/>} />
+                <Route path="partner" element = {<PartnerRegistration/>} />
+                <Route path="member" element = {<MemberRegistration />} />
               </Route>
 
               <Route path="/user"> 
-                <Route index element = {<User connectedUser={connectedUser}/>} />
-                <Route path="member" element = {<MemberComponent connectedUser={connectedUser} />} /> 
-                <Route path="partner" element = {<PartnerComponent connectedUser={connectedUser} />} /> 
-                <Route path="admin" element = {<Admin connectedUser={connectedUser} backendUrl={backendUrl}/>} /> 
+                <Route index element = {<User />} />
+                <Route path="member" element = {<MemberComponent />} /> 
+                <Route path="partner" element = {<PartnerComponent />} /> 
+                <Route path="admin" element = {<Admin />} /> 
               </Route>
 
           </Routes>

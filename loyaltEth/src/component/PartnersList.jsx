@@ -1,6 +1,6 @@
 import { List, ListItem, Button, Box, Tr, Td, Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../api/axios";
 
 const PartnersList = ({setRefresh, partners, connectedUser, backendUrl}) => {
     const [addressToDelete, setAddressTodelete] = useState();
@@ -8,7 +8,7 @@ const PartnersList = ({setRefresh, partners, connectedUser, backendUrl}) => {
 
     const deletePartner = async (address) => {
          try {
-                const response = await axios.delete(backendUrl + `/user/${address}`)
+                const response = await axios.delete(`/user/${address}`)
                 console.log("res from partnerList axios DELETE call" , response)
                 setModal(false);
                 setRefresh(true);
@@ -22,6 +22,10 @@ const PartnersList = ({setRefresh, partners, connectedUser, backendUrl}) => {
         setAddressTodelete(address);
         setModal(true);
     }
+
+    useEffect(()=>{
+        console.log("partners : ", partners)
+    },[])
 
     const Modal = () => {
         return (
@@ -43,12 +47,12 @@ const PartnersList = ({setRefresh, partners, connectedUser, backendUrl}) => {
         <>
                 
                 {partners?.map( partner => 
-                <Tr key={partner.id}>
-                    <Td key={`${partner.id}name`}>{partner.name} </Td>
-                    <Td key={`${partner.id}add`}>{partner.address}</Td>
-                    <Td key={`${partner.id}web`}>{partner.webSite}</Td>
-                    <Td key={`${partner.id}role`}>{partner.role}</Td>
-                    <Td key={`${partner.id}delete`}>{connectedUser?.role == 3003 ? <Button onClick={ () => manageDelete(partner.address)}> delete</Button> : null}</Td>
+                <Tr key={partner._id}>
+                    <Td key={`${partner._id}name`}>{partner.name} </Td>
+                    <Td key={`${partner._id}add`}>{partner.address}</Td>
+                    <Td key={`${partner._id}web`}>{partner.webSite}</Td>
+                    <Td key={`${partner._id}role`}>{partner.role}</Td>
+                    <Td key={`${partner._id}delete`}>{connectedUser?.role == 3003 ? <Button onClick={ () => manageDelete(partner.address)}> delete</Button> : null}</Td>
                 </Tr>
                 ) }
             {modal? <Modal /> : null }

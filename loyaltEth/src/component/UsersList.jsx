@@ -1,6 +1,6 @@
 import { Button, List, ListItem } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../api/axios";
 
 const UsersList = ({backendUrl, connectedUser}) => {
     const [users, setUsers] = useState([])
@@ -10,7 +10,7 @@ const UsersList = ({backendUrl, connectedUser}) => {
         async function getUsers (){ //todo add try catch
             console.log("start querying all users");
             try {
-                const response = await axios.get(backendUrl + "/user/members")
+                const response = await axios.get("/user/members")
                 console.log("res from usersList axios call" , response)
                 setUsers(response.data);
             } catch (err) {

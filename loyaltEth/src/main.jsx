@@ -12,6 +12,7 @@ import {
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { goerli } from "wagmi/chains";
 import { Web3Modal } from "@web3modal/react";
+import { AuthProvider } from './context/AuthProvider';
 
 
 const chains = [goerli];
@@ -31,7 +32,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <WagmiConfig config={wagmiConfig}>
-       <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </WagmiConfig>
       <Web3Modal
           projectId= {projectId}

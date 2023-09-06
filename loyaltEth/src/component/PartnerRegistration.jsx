@@ -10,7 +10,7 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { Web3Button } from "@web3modal/react";
-import axios from "axios";
+import axios from "../api/axios";
 import { useAccount, useWalletClient, useSignMessage  } from 'wagmi';
 import { useNavigate } from "react-router-dom";
 
@@ -37,7 +37,7 @@ const PartnerRegistration = ({backendUrl}) => {
     console.log(signedMessage);
     try {
       // await AccordionButton.
-      await axios.post(backendUrl + "/user", {
+      await axios.post("/user", {
         user : { name : name,
                  address: address,
                  role:2002,

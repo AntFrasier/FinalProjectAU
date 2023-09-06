@@ -2,22 +2,26 @@ import { Box, Heading, List, Table, Tr, Th, Td, Thead, TableCaption, Tbody, Tfoo
 import React, { useEffect, useState } from 'react';
 import PartnersList from '../component/PartnersList';
 import UsersList from '../component/UsersList';
-import axios from "axios";
+import axios from "../api/axios";
+import useAuth from '../hooks/useAuth';
 
 
-const Admin = ({backendUrl, connectedUser}) => {
+const Admin = () => {
     const [partners, setPartners] = useState([]);
     const [users, setUsers] = useState([]);
     const [refresh, setRefresh] = useState(false);
 
-  
+    const auth = useAuth();
+    const [connectedUser, setConnectedUser] = useState();
+    
     useEffect(()=>{
+
         const abortController = new AbortController(); // finish the protect call to api
         async function getPartners (){ 
             console.log("start querying");
             try {
-                const response = await axios.get(backendUrl + "/user/partners")
-                const response2 = await axios.get(backendUrl + "/user/members")
+                const response = await axios.get("/user/partners")
+                const response2 = await axios.get("/user/members")
                 console.log("res from partnerList axios call" , response)
                 setPartners(response.data);
                 setUsers(response2.data);
@@ -28,6 +32,11 @@ const Admin = ({backendUrl, connectedUser}) => {
         getPartners();
 
     }, [refresh])
+
+    useEffect( () =>{
+        setConnectedUser(auth.auth.user);
+        console.log("in useeffect setConnected", connectedUser)
+    }, [auth])
 
   return (
     <Box>
@@ -54,7 +63,7 @@ const Admin = ({backendUrl, connectedUser}) => {
                         setRefresh={setRefresh} 
                         partners={partners} 
                         connectedUser={connectedUser} 
-                        backendUrl={backendUrl}
+                        
                     />   
                 </Tbody>
                 <Tfoot>
@@ -85,7 +94,7 @@ const Admin = ({backendUrl, connectedUser}) => {
                         setRefresh={setRefresh} 
                         partners={users} 
                         connectedUser={connectedUser}
-                        backendUrl={backendUrl}
+                        
                     />   
                 </Tbody>
                 <Tfoot>

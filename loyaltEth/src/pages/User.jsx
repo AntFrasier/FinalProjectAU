@@ -1,13 +1,18 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import UserComponent from '../component/MemberComponent';
+import useAuth from '../hooks/useAuth';
 
-const User = ({connectedUser}) => {
+//const User = ({connectedUser}) => {
+const User = () => {
     const navigate = useNavigate();
-    console.log("user in the user page : ", connectedUser);
+    
+    const auth = useAuth();
 
     useEffect ( () => {
-        
+        console.log("user in the user page : ", auth.auth.user);
+        console.log(auth.auth)
+        const connectedUser = auth.auth.user;
         if(connectedUser?.role) {
             switch (connectedUser.role) {
                 case 1001 : 
@@ -21,7 +26,7 @@ const User = ({connectedUser}) => {
                     break;
             }
         }
-    },[connectedUser])
+    },[auth])
     
     return (
         <div>Not connected</div>
