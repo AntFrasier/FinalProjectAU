@@ -93,17 +93,32 @@ function App() {
     }
   }
 
+  async function logout() {
+    
+    try {
+      const response = await axiosPrivate.get(`/logout/${auth.user.address}`)
+        .then( (response) => {
+          console.log ("response from the logout backend :",response);
+          if (response.status == 200) {
+            console.log('****************************Disconnected********************************');
+            setRegistred(false);
+            setAuth(null);
+            localStorage.removeItem("connectedUser");
+            navigate("/home");
+          } else {
+              console.log( "Somethong when wrong whith the disconnect");
+          }
+        })
+    } catch (err) {
+      alert(err)
+    }
+  }
+
   const account = useAccount({
     
     onDisconnect() { //BUG this is not trigger some times .... why ??????? It seems that if i save app.jsx and not reload the page it is not triger
-      console.log('****************************Disconnected********************************');
-      navigate("/home");
-      setRegistred(false);
-      setAuth(null);
       
-      //todo remove token front and back
-      localStorage.removeItem("connectedUser");
-
+      logout();
    },
     onConnect({ address, connector, isReconnected }) {
       console.log('Connected', { address, connector, isReconnected });

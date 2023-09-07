@@ -27,6 +27,7 @@ app.use('/refresh', require('./routes/refreshRoutes'));
 
 //routes protected by jwt verification
 app.use(verifyJWT);
+app.use("/logout", require('./routes/logoutRoutes'));
 app.use('/user', require('./routes/userRoutes'));
 app.use('/campaign', require('./routes/campaignRoutes'));
 

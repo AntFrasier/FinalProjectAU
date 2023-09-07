@@ -60,7 +60,6 @@ const login = async (req, res) => {
             
         }
 
-        
         //res.cookie("jwt", refreshToken,{httpOnly: false, maxAge: 24 * 60 *60 * 1000});  //send the refresh token as an http only cookie so it can not be accessible from JS for security concern not perfect but quite secure
         //res.send();
         res.cookie("jwt", refreshToken, {httpOnly: true, maxAge: 24 * 60 *60 * 1000}); 
@@ -96,4 +95,13 @@ const refresh = async (req, res) => {
     )
 }
 
-module.exports = { login, refresh, getNonce };
+const logout = async (req, res) => {
+    const { id } = req.params;
+    const existUser = await User.findOne({address: id}).exec()
+    if (!existUser) return res.status(404).send({message: "User not found!"})
+    existUser.refreshToken = "";
+    await existUser.save();
+    return res.status(200).send({message : " refreshToken has been removed"});
+}
+
+module.exports = { login, refresh, getNonce, logout };
