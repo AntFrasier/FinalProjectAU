@@ -25,7 +25,7 @@ import PartnerComponent from "./component/PartnerComponent";
 import AdminComponent from "./component/AdminComponent";
 import Partners from "./pages/Partners";
 import Admin from "./pages/Admin";
-
+import useAxiosPrivate from "./hooks/useAxiosPrivate";
 
 
 const colors = {
@@ -51,10 +51,10 @@ function App() {
   const navigate = useNavigate();
   const [registred, setRegistred] = useState(false);
   const [connectedUser, setConnectedUser] = useState();
-  const { setAuth } = useAuth();
-
+  const { setAuth, auth } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
   async function getSigneMessage(userAddress) {
-    const nonce = await axios.get(`/user/nonce/${userAddress}`) //get nonce from the back end to avoid duplicate signature loggIn
+    const nonce = await axios.get(`/login/nonce/${userAddress}`) //get nonce from the back end to avoid duplicate signature loggIn
     console.log("nonce : ", nonce.data.data)
     return await signMessageAsync({ message :`Login to LoyaltEth/${userAddress}/${nonce.data.data}`});
   }
@@ -66,12 +66,11 @@ function App() {
       const response = await axios.post("/login/" , {
         address : userAddress,
         signature :userSignature
-      }).then( (response, cookie) => {
+      }).then( (response) => {
         console.log ("response from the login backend :",response);
-        console.log ("cookie from the login backend :",cookie);
         if (response.status == 200) {
             let user = response.data.data;
-            let cookie = response.data.cookie
+            user = { ...user, accessToken : response.data.accessToken };
             localStorage.setItem("connectedUser", JSON.stringify(user))
             setRegistred(true);
             setAuth({user});
@@ -109,7 +108,8 @@ function App() {
       if (isReconnected) {
         const connectedUser = JSON.parse( localStorage.getItem("connectedUser"))
         setAuth({user : connectedUser});
-        console.log("allready connected");
+        console.log("allready connected" , connectedUser, auth);
+        
         // setAuth(auth.auth.user);
       } else {
         login(address);

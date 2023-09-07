@@ -2,8 +2,8 @@ import { Box, Heading, List, Table, Tr, Th, Td, Thead, TableCaption, Tbody, Tfoo
 import React, { useEffect, useState } from 'react';
 import PartnersList from '../component/PartnersList';
 import UsersList from '../component/UsersList';
-import axios from "../api/axios";
 import useAuth from '../hooks/useAuth';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 
 const Admin = () => {
@@ -12,16 +12,22 @@ const Admin = () => {
     const [refresh, setRefresh] = useState(false);
 
     const auth = useAuth();
+    const axiosPrivate = useAxiosPrivate();
     const [connectedUser, setConnectedUser] = useState();
-    
+
+    // useEffect( () =>{
+    //     setConnectedUser(auth.auth.user);
+    //     console.log("in useeffect setConnected", connectedUser)
+    // }, [auth])
+
     useEffect(()=>{
 
         const abortController = new AbortController(); // finish the protect call to api
         async function getPartners (){ 
             console.log("start querying");
             try {
-                const response = await axios.get("/user/partners")
-                const response2 = await axios.get("/user/members")
+                const response = await axiosPrivate.get("/user/partners")
+                const response2 = await axiosPrivate.get("/user/members")
                 console.log("res from partnerList axios call" , response)
                 setPartners(response.data);
                 setUsers(response2.data);
@@ -31,12 +37,13 @@ const Admin = () => {
         }
         getPartners();
 
+        return () => {
+            abortController.abort();
+        }
+
     }, [refresh])
 
-    useEffect( () =>{
-        setConnectedUser(auth.auth.user);
-        console.log("in useeffect setConnected", connectedUser)
-    }, [auth])
+   
 
   return (
     <Box>

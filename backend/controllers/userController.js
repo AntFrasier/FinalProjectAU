@@ -1,6 +1,5 @@
 const User = require("../model/User");
 
-
 // @desc post new user 
 // @route Post /user
 async function RegisterUser(req, res) {
@@ -33,7 +32,6 @@ async function RegisterUser(req, res) {
 // @route Post /user/:id
 async function getUser(req, res) { 
     const { id } = req.params; //id stand for address in the params
-    console.log(id)
     try {
         const existUser = await User.findOne({address : id}).exec();
         if (existUser) {
@@ -46,30 +44,13 @@ async function getUser(req, res) {
     }
 }
 
-// @desc Get a specific User nonce
-// @route Post /user/nonce/:id
-async function getNonce(req, res) {
-    const { id } = req.params; //id stand for address in the params
-    console.log("try to reach the nonce" , id)
-    try {
-        const existUser = await User.findOne({address : id}).exec();
-        console.log("do i find the user here ?", existUser)
-        if (existUser) {
-            return res.status(200).send({message: "user exist", data : existUser.nonce});
-         
-        } else return res.status(204).send({message: "no user found"})
-    } catch (err) {
-        console.error(err);
-        return res.status(500).send({message : `serveur erreur : ${err}`});
-    }
-}
+
 
 // @desc Get all users whith partners role 
 // @route Post /user/partners
 async function getPartners(req, res) { 
     try {
         const partners = await User.find({role : 2002}).exec();
-        console.log(partners)
         res.status(200).send(partners)
        
     } catch (err) {
@@ -83,7 +64,6 @@ async function getPartners(req, res) {
 async function getMembers(req, res) { 
         try {
         const members = await User.find({role : 1001}).exec();
-        console.log(members)
         res.status(200).send(members)
        
     } catch (err) {
@@ -94,11 +74,9 @@ async function getMembers(req, res) {
 
 async function deleteUser(req, res) {
     const { id } = req.params; //id stand for address in the params
-    console.log(id)
     try {
         const userDeleted = await User.findOneAndDelete({address : id}).exec();
         if (userDeleted) {
-        console.log(userDeleted)
          res.status(200).send({message: "user deleted !", data : userDeleted});
          return;
         } else res.status(204).send({message: "no user found"})
@@ -108,4 +86,4 @@ async function deleteUser(req, res) {
     }
 }
 
-module.exports = { RegisterUser, getUser, getPartners, getMembers, deleteUser, getNonce };
+module.exports = { RegisterUser, getUser, getPartners, getMembers, deleteUser };

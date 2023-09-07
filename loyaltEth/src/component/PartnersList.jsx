@@ -1,14 +1,16 @@
 import { List, ListItem, Button, Box, Tr, Td, Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import axios from "../api/axios";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+//import axios from "../api/axios";
 
 const PartnersList = ({setRefresh, partners, connectedUser, backendUrl}) => {
     const [addressToDelete, setAddressTodelete] = useState();
     const [modal, setModal] = useState(false);
-
+    const axiosPrivate = useAxiosPrivate();
+    
     const deletePartner = async (address) => {
          try {
-                const response = await axios.delete(`/user/${address}`)
+                const response = await axiosPrivate.delete(`/user/${address}`)
                 console.log("res from partnerList axios DELETE call" , response)
                 setModal(false);
                 setRefresh(true);

@@ -17,7 +17,7 @@ return (
                 <Link to="/about" cursor="pointer">
                     About
                 </Link>
-                <Link to="/partners" boxShadow="1px solid black" cursor="pointer">
+                <Link to="/partners" cursor="pointer">
                     Partners
                 </Link>
             </Box>

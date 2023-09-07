@@ -1,16 +1,18 @@
 import { Button, List, ListItem } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import axios from "../api/axios";
+//import axios from "../api/axios";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 const UsersList = ({backendUrl, connectedUser}) => {
     const [users, setUsers] = useState([])
+    const axiosPrivate = useAxiosPrivate();
   
     useEffect(()=>{
         const abortController = new AbortController();
         async function getUsers (){ //todo add try catch
             console.log("start querying all users");
             try {
-                const response = await axios.get("/user/members")
+                const response = await axiosPrivate.get("/user/members")
                 console.log("res from usersList axios call" , response)
                 setUsers(response.data);
             } catch (err) {

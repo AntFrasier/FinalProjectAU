@@ -10,9 +10,10 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { Web3Button } from "@web3modal/react";
-import axios from "../api/axios";
+//import axios from "../api/axios";
 import { useAccount, useWalletClient, useSignMessage  } from 'wagmi';
 import { useNavigate } from "react-router-dom";
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 
 
@@ -25,6 +26,7 @@ const PartnerRegistration = ({backendUrl}) => {
   const {address, isConnected} = useAccount();
   const { data: signer } = useWalletClient();
   const { data, isError, isLoading, isSuccess, signMessageAsync } = useSignMessage()
+  const axiosPrivate = useAxiosPrivate();
 
 
 
@@ -33,11 +35,11 @@ const PartnerRegistration = ({backendUrl}) => {
       console.log("the signer is : ",signer)
       
     // const signMessage = await signer.signMessage(`${name} ${address}`);
-    const signedMessage =  await signMessageAsync({message : `${name} ${address}`});
+    const signedMessage =  await signMessageAsync({message : `${name} ${address}`}); //todo mofi to accord to signature verification with nonce
     console.log(signedMessage);
     try {
       // await AccordionButton.
-      await axios.post("/user", {
+      await axiosPrivate.post("/register", {
         user : { name : name,
                  address: address,
                  role:2002,
