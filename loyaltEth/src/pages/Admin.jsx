@@ -10,21 +10,15 @@ const Admin = () => {
     const [partners, setPartners] = useState([]);
     const [users, setUsers] = useState([]);
     const [refresh, setRefresh] = useState(false);
-
     const auth = useAuth();
     const axiosPrivate = useAxiosPrivate();
-    const [connectedUser, setConnectedUser] = useState();
+    //const [connectedUser, setConnectedUser] = useState();
+    const connectedUser = auth?.user
 
-    // useEffect( () =>{
-    //     setConnectedUser(auth.auth.user);
-    //     console.log("in useeffect setConnected", connectedUser)
-    // }, [auth])
-
+   
     useEffect(()=>{
-
         const abortController = new AbortController(); // finish the protect call to api
         async function getPartners (){ 
-            console.log("start querying");
             try {
                 const response = await axiosPrivate.get("/user/partners")
                 const response2 = await axiosPrivate.get("/user/members")
@@ -35,6 +29,7 @@ const Admin = () => {
                 alert(err);
             }
         }
+
         getPartners();
 
         return () => {
@@ -44,7 +39,6 @@ const Admin = () => {
     }, [refresh])
 
    
-
   return (
     <Box>
         <Heading as={"h2"} mb={"5"}> Administration {connectedUser?.name} :</Heading>

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import React from "react";
 
 
-export default function Header(){
+export default function Header({registred}){
 
 return (
     <>  
@@ -20,6 +20,10 @@ return (
                 <Link to="/partners" cursor="pointer">
                     Partners
                 </Link>
+                {registred? (<Link to="/user" cursor="pointer">
+                    Dashboard
+                </Link> ) : null }
+                
             </Box>
         </Box>
         <Web3Button 

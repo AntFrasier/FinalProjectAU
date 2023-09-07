@@ -14,7 +14,7 @@ const Campaigns = () => {
                 {campagns === null ? ( 
                     <ListItem>no Campagn</ListItem> 
                 ) : (
-                    campagns?.map( campaign => <ListItem key={campagn.id}>{campagn.name}</ListItem>)
+                    campagns?.map( campagn => <ListItem key={campagn.id}>{campagn.name}</ListItem>)
                 ) 
                 }
                 <ListItem><Addcampagn setModal={setModal} modal={modal}/></ListItem>

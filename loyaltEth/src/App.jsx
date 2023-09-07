@@ -51,6 +51,7 @@ function App() {
   const navigate = useNavigate();
   const [registred, setRegistred] = useState(false);
   const [connectedUser, setConnectedUser] = useState();
+  const [isConnecting, setIsConnecting] = useState(false);
   const { setAuth, auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
   async function getSigneMessage(userAddress) {
@@ -61,13 +62,15 @@ function App() {
 
   async function login(userAddress) {
     try {
+      setIsConnecting(true);
       const userSignature = await getSigneMessage(userAddress)
-      console.log("userSignature", userSignature)
+      console.log("userSignature", userSignature);
       const response = await axios.post("/login/" , {
         address : userAddress,
         signature :userSignature
       }).then( (response) => {
         console.log ("response from the login backend :",response);
+        setIsConnecting(false);
         if (response.status == 200) {
             let user = response.data.data;
             user = { ...user, accessToken : response.data.accessToken };
@@ -90,8 +93,6 @@ function App() {
     }
   }
 
- 
-
   const account = useAccount({
     
     onDisconnect() { //BUG this is not trigger some times .... why ??????? It seems that if i save app.jsx and not reload the page it is not triger
@@ -102,6 +103,7 @@ function App() {
       
       //todo remove token front and back
       localStorage.removeItem("connectedUser");
+
    },
     onConnect({ address, connector, isReconnected }) {
       console.log('Connected', { address, connector, isReconnected });
@@ -120,37 +122,16 @@ function App() {
     
    
   })
-  // const isDeconnected = useAccount( {
-  //   onDisconnect() { //BUG this is not trigger some times .... why ???????
-  //     console.log('****************************Disconnected********************************');
-  //     navigate("/home");
-  //     setRegistred(false);
-  //     //todo remove token front and back
-  //     localStorage.removeItem("user");
-
-
-  //   },
-  // })
-
-  useEffect( () => {
-    console.log("****************************** connection status changed :", account.status); //the disconnected status doesnt appears some times that wired ....
-   
-  
-  },[account])
-
-  useEffect( () => {
-    console.log("user changed", connectedUser);
-  }, [connectedUser])
-
+ 
    return (
     <>
     <ChakraProvider theme={theme}>
       
-      <Header />
+      <Header registred = {registred}/>
      
       <Box pl={15}>
           <Routes>
-              <Route path="/home" element = {<Index registred={registred}/>}/> 
+              <Route path="/home" element = {<Index isConnecting={isConnecting}/>}/> 
               <Route path="/about" element = {<About />} />
               <Route path="/partners" element = {<Partners />} />
 

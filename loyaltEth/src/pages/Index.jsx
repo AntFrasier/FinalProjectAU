@@ -1,25 +1,17 @@
 import React, { useEffect } from 'react';
 import { useAccount, useConnect, useEnsName } from 'wagmi';
 import { useNavigate } from 'react-router-dom';
+import { Box, Flex, Spinner } from '@chakra-ui/react';
 
-const Index = ({registred}) => {
-  const { address, isConnected } = useAccount();
-  const navigate = useNavigate();
+const Index = ({isConnecting}) => {
 
-  useEffect( () => { //use a use effect ro avoid bad rendering on first render
-    if (isConnected) { 
-      if (registred) {
-        navigate("/user")
-        } else {
-        navigate("/register")
-      }}
 
-  },[isConnected, registred])
- 
+
     return (
-      <div>
-      Please Login
-      </div>)
+      <Flex flexDir={"row"} alignContent={"center"} justifyContent={"center"} alignItems={"center"}>
+        {isConnecting? <Spinner size={"xl"}/> : <p>Please Login</p>}
+      </Flex>
+    )
 }
 
 export default Index

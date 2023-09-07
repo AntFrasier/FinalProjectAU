@@ -8,7 +8,6 @@ const useAxiosPrivate = () => {
     const { auth } = useAuth();
 
     useEffect(() => {
-        console.log("auth :",auth)
         const accessToken = JSON.parse(localStorage.getItem("connectedUser"))?.accessToken;
         const requestIntercept = axiosPrivate.interceptors.request.use(
             config => {
