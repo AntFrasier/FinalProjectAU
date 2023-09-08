@@ -17,7 +17,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 
 
-const MemberRegistration = ({backendUrl}) => {
+const MemberRegistration = ({login}) => {
   const navigate = useNavigate();
   const [active, setActive] = useState('false');
   const [loading, setLoading] = useState(false);
@@ -30,8 +30,8 @@ const MemberRegistration = ({backendUrl}) => {
 
   async function handleRegister() {
     if (isConnected) {
-    const signature = await signMessageAsync({ message :`${name} ${address}`}); //todo mofi to accord to signature verification with nonce
-    console.log(signature);
+    // const signature = await signMessageAsync({ message :`${name} ${address}`}); //todo mofi to accord to signature verification with nonce
+    // console.log(signature);
     try {
       // await AccordionButton.
       await axiosPrivate.post("/register", { 
@@ -39,19 +39,17 @@ const MemberRegistration = ({backendUrl}) => {
                  address: address,
                  role:1001,
                  website: "",
-                 signature: signature,
       }}).then(response => {
+        //todo login instead
         console.log(response);
-        localStorage.setItem("user", JSON.stringify(response.data.data));
-        navigate("/user");
+        login(address);
       })
       
     } catch(err){
       switch (err.response.status) {
         case 409 : 
           console.log(err.response.data.data)
-          localStorage.setItem("user", JSON.stringify(err.response.data.data))
-          navigate("/user");
+          login(address);
           break;
         default : console.log("error : ", err );
       }

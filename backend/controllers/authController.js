@@ -27,48 +27,53 @@ const login = async (req, res) => {
     const {address, signature} = req.body;
     console.log(req.body)
     console.log("trying to login wihth :" , address , signature)
-    if (!address&&!signature ) return res.status(400).send({message : "address and signature Required"});
-    //chek if user allready exist
-    const existUser = await User.findOne({address : address}).exec();
-    if (!existUser) return res.status(401).send({message : "user not found Please register first !"})
-    const  authorized = await verifyMySignature(address, signature, existUser.nonce);
-    if (authorized) {
-        console.log(address, " autorized");
-        const accessToken = jwt.sign(
-            {"signature" : signature},
-            process.env.ACCESS_TOKEN_SECRET,
-            {expiresIn: "30s"}
-        );
-        const refreshToken = jwt.sign(
-            {"signature" : signature},
-            process.env.REFRESH_TOKEN_SECRET,
-            {expiresIn: "5d"}
-        );
-        existUser.refreshToken = refreshToken;    
-        existUser.signedHash = signature;    
-        existUser.nonce++;
-        await existUser.save();
-        console.log("the existing user : ",existUser)
-        const toSendBack = { //just send what we need in the front
-            id:existUser.id,
-            address:existUser.address,
-            name:existUser.name,
-            nonce:existUser.nonce,
-            role:existUser.role,
-            website:existUser.webSite,
-            accessToken: existUser.accessToken,
-            
+    try {
+        if (!address&&!signature ) return res.status(400).send({message : "address and signature Required"});
+        //chek if user allready exist
+        const existUser = await User.findOne({address : address}).exec();
+        if (!existUser) return res.status(204).send({message : "user not found Please register first !"})
+        const  authorized = await verifyMySignature(address, signature, existUser.nonce);
+        if (authorized) {
+            console.log(address, " autorized");
+            const accessToken = jwt.sign(
+                {"signature" : signature},
+                process.env.ACCESS_TOKEN_SECRET,
+                {expiresIn: "10s"}
+            );
+            const refreshToken = jwt.sign(
+                {"signature" : signature},
+                process.env.REFRESH_TOKEN_SECRET,
+                {expiresIn: "5d"}
+            );
+            existUser.refreshToken = refreshToken;    
+            existUser.signedHash = signature;    
+            existUser.nonce++;
+            await existUser.save();
+            console.log("the existing user : ",existUser)
+            const toSendBack = { //just send what we need in the front
+                id:existUser.id,
+                address:existUser.address,
+                name:existUser.name,
+                nonce:existUser.nonce,
+                role:existUser.role,
+                website:existUser.webSite,
+                accessToken: existUser.accessToken,
+                
+            }
+    
+            //res.cookie("jwt", refreshToken,{httpOnly: false, maxAge: 24 * 60 *60 * 1000});  //send the refresh token as an http only cookie so it can not be accessible from JS for security concern not perfect but quite secure
+            //res.send();
+            res.cookie("jwt", refreshToken, {httpOnly: true, maxAge: 24 * 60 *60 * 1000}); 
+            res.status(200);
+            res.send({message: "Autorized", data : toSendBack, accessToken: accessToken}); 
+        } else {
+            console.log(authorized, address, "not authorized");
+            res.status(403).send({message: "Not Autorized Signature doesnt match !"})
         }
-
-        //res.cookie("jwt", refreshToken,{httpOnly: false, maxAge: 24 * 60 *60 * 1000});  //send the refresh token as an http only cookie so it can not be accessible from JS for security concern not perfect but quite secure
-        //res.send();
-        res.cookie("jwt", refreshToken, {httpOnly: true, maxAge: 24 * 60 *60 * 1000}); 
-        res.status(200);
-        res.send({message: "Autorized", data : toSendBack, accessToken: accessToken}); 
-    } else {
-        console.log(authorized, address, "not authorized");
-        res.status(403).send({message: "Not Autorized Signature doesnt match !"})
+    } catch (err) {
+        res.satus(500).send({message : "Erreur serveur"})
     }
+    
 }
 
 

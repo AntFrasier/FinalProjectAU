@@ -2,9 +2,11 @@ import { Web3Button } from "@web3modal/react";
 import { Box, Heading } from "@chakra-ui/react";
 import { Link } from 'react-router-dom';
 import React from "react";
+import useAuth from "../hooks/useAuth";
 
 
 export default function Header({registred}){
+    const {auth} = useAuth();
 
 return (
     <>  
@@ -20,7 +22,7 @@ return (
                 <Link to="/partners" cursor="pointer">
                     Partners
                 </Link>
-                {registred? (<Link to="/user" cursor="pointer">
+                {auth?.user?.role ? (<Link to="/user" cursor="pointer">
                     Dashboard
                 </Link> ) : null }
                 

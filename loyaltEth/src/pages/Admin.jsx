@@ -10,17 +10,16 @@ const Admin = () => {
     const [partners, setPartners] = useState([]);
     const [users, setUsers] = useState([]);
     const [refresh, setRefresh] = useState(false);
-    const auth = useAuth();
+    const {auth} = useAuth();
     const axiosPrivate = useAxiosPrivate();
     //const [connectedUser, setConnectedUser] = useState();
     const connectedUser = auth?.user
-
    
     useEffect(()=>{
         const abortController = new AbortController(); // finish the protect call to api
         async function getPartners (){ 
             try {
-                const response = await axiosPrivate.get("/user/partners")
+                const response = await axiosPrivate.get("/user/partners") //TODO should do a backend route for both partners / members (and maybe admin too)
                 const response2 = await axiosPrivate.get("/user/members")
                 console.log("res from partnerList axios call" , response)
                 setPartners(response.data);
@@ -31,17 +30,17 @@ const Admin = () => {
         }
 
         getPartners();
-
+        console.log("auth in admin : ", auth)
         return () => {
             abortController.abort();
         }
 
     }, [refresh])
 
-   
+   //TODO add the possibility to add admins and to modifie things
   return (
     <Box>
-        <Heading as={"h2"} mb={"5"}> Administration {connectedUser?.name} :</Heading>
+        <Heading as={"h2"} mb={"5"}> DashBoard {connectedUser?.name} :</Heading>
         <Flex>
         <Box bg={"blue.100"}> 
             Menu

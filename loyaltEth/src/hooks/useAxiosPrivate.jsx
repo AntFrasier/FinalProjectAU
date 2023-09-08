@@ -8,12 +8,12 @@ const useAxiosPrivate = () => {
     const { auth } = useAuth();
 
     useEffect(() => {
-        const accessToken = JSON.parse(localStorage.getItem("connectedUser"))?.accessToken;
+        
         const requestIntercept = axiosPrivate.interceptors.request.use(
             config => {
                 if(!config.headers["authorization"]) {
-                    config.headers["authorization"] = `Bearer ${accessToken}`; //not sure 
-                    console.log("i'm in the config", config.headers["authorization"])
+                    config.headers["authorization"] = `Bearer ${auth.user.accessToken}`; //not sure 
+                    console.log("i'm in the config auth", config.headers["authorization"])
                 }
                 return config;
 

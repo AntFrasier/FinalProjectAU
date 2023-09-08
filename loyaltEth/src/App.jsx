@@ -77,8 +77,6 @@ function App() {
             localStorage.setItem("connectedUser", JSON.stringify(user))
             setRegistred(true);
             setAuth({user});
-            
-            //setConnectedUser(user);
             navigate("/user");
             //todo manage a connection not allready register
         } else {
@@ -116,8 +114,7 @@ function App() {
 
   const account = useAccount({
     
-    onDisconnect() { //BUG this is not trigger some times .... why ??????? It seems that if i save app.jsx and not reload the page it is not triger
-      
+    onDisconnect() { //BUG this is not trigger some times .... why ??????? It seems that if i save app.jsx and not reload the page it is not trigger
       logout();
    },
     onConnect({ address, connector, isReconnected }) {
@@ -152,8 +149,8 @@ function App() {
 
               <Route path="/register"  >
                 <Route index element = {<Register />} />
-                <Route path="partner" element = {<PartnerRegistration/>} />
-                <Route path="member" element = {<MemberRegistration />} />
+                <Route path="partner" element = {<PartnerRegistration login = {login}/>} />
+                <Route path="member" element = {<MemberRegistration login = {login}/>} />
               </Route>
 
               <Route path="/user"> 

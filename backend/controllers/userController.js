@@ -18,8 +18,8 @@ async function RegisterUser(req, res) {
             "address" : user.address,
             "role" : user.role,
             "webSite" : user.website,
-            "signedHash": user.signature,
-        })
+            "signedHash": "",
+        }) //
         console.log(result);
         res.status(201).send({message : `New user ${user.address} created.`, data : result});
     } catch (err) {

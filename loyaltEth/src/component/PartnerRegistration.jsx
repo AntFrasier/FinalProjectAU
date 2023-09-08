@@ -17,7 +17,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 
 
-const PartnerRegistration = ({backendUrl}) => {
+const PartnerRegistration = ({login}) => {
   const navigate = useNavigate();
   const [active, setActive] = useState('false');
   const [loading, setLoading] = useState(false);
@@ -35,8 +35,8 @@ const PartnerRegistration = ({backendUrl}) => {
       console.log("the signer is : ",signer)
       
     // const signMessage = await signer.signMessage(`${name} ${address}`);
-    const signedMessage =  await signMessageAsync({message : `${name} ${address}`}); //todo mofi to accord to signature verification with nonce
-    console.log(signedMessage);
+    // const signedMessage =  await signMessageAsync({message : `${name} ${address}`}); //todo mofi to accord to signature verification with nonce
+    // console.log(signedMessage);
     try {
       // await AccordionButton.
       await axiosPrivate.post("/register", {
@@ -44,17 +44,16 @@ const PartnerRegistration = ({backendUrl}) => {
                  address: address,
                  role:2002,
                  website: webSite,
-                 signature: signedMessage,
+                 //signature: signedMessage,
       }}).then(response => {
         console.log(response);
-        localStorage.setItem("user", JSON.stringify(response.data.data));
-        navigate("/user");
+        login(address)
       })
       
     } catch(err){
       console.log(err)
       switch (err.response.status) {
-        case 409 : 
+        case 409 : //todo remove that
           console.log(err.response.data.data)
           localStorage.setItem("user", JSON.stringify(err.response.data.data))
           navigate("/user");
