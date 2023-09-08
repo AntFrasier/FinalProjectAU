@@ -1,19 +1,21 @@
 import { List, ListItem, Button, Box, Tr, Td, Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import useAuth from "../hooks/useAuth";
 //import axios from "../api/axios";
 
-const PartnersList = ({setRefresh, partners, connectedUser, backendUrl}) => {
+const PartnersList = ({partners}) => {
     const [addressToDelete, setAddressTodelete] = useState();
     const [modal, setModal] = useState(false);
     const axiosPrivate = useAxiosPrivate();
+    const { auth } = useAuth();
     
-    const deletePartner = async (address) => {
+    const deletePartner = async (address) => { //todo this soulf be moved somewhere eles
          try {
                 const response = await axiosPrivate.delete(`/user/${address}`)
                 console.log("res from partnerList axios DELETE call" , response)
                 setModal(false);
-                setRefresh(true);
+                //setRefresh(true);
 
             } catch (err) {
                 setModal(false);
@@ -54,7 +56,7 @@ const PartnersList = ({setRefresh, partners, connectedUser, backendUrl}) => {
                     <Td key={`${partner._id}add`}>{partner.address}</Td>
                     <Td key={`${partner._id}web`}>{partner.webSite}</Td>
                     <Td key={`${partner._id}role`}>{partner.role}</Td>
-                    <Td key={`${partner._id}delete`}>{connectedUser?.role == 3003 ? <Button onClick={ () => manageDelete(partner.address)}> delete</Button> : null}</Td>
+                    <Td key={`${partner._id}delete`}>{auth.user?.role == 3003 ? <Button onClick={ () => manageDelete(partner.address)}> delete</Button> : null}</Td>
                 </Tr>
                 ) }
             {modal? <Modal /> : null }

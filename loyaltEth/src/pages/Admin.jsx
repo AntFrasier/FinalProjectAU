@@ -1,7 +1,6 @@
-import { Box, Heading, List, Table, Tr, Th, Td, Thead, TableCaption, Tbody, Tfoot, Flex } from '@chakra-ui/react';
+import { Box, Heading, Table, Tr, Th, Td, Thead, TableCaption, Tbody, Tfoot, Flex } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import PartnersList from '../component/PartnersList';
-import UsersList from '../component/UsersList';
 import useAuth from '../hooks/useAuth';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
@@ -9,7 +8,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 const Admin = () => {
     const [partners, setPartners] = useState([]);
     const [users, setUsers] = useState([]);
-    const [refresh, setRefresh] = useState(false);
+    //const [refresh, setRefresh] = useState(false);
     const {auth} = useAuth();
     const axiosPrivate = useAxiosPrivate();
     //const [connectedUser, setConnectedUser] = useState();
@@ -19,7 +18,7 @@ const Admin = () => {
         const abortController = new AbortController(); // finish the protect call to api
         async function getPartners (){ 
             try {
-                const response = await axiosPrivate.get("/user/partners") //TODO should do a backend route for both partners / members (and maybe admin too)
+                const response = await axiosPrivate.get("/partners") //TODO should do a backend route for both partners / members (and maybe admin too)
                 const response2 = await axiosPrivate.get("/user/members")
                 console.log("res from partnerList axios call" , response)
                 setPartners(response.data);
@@ -35,7 +34,7 @@ const Admin = () => {
             abortController.abort();
         }
 
-    }, [refresh])
+    }, [])
 
    //TODO add the possibility to add admins and to modifie things
   return (
@@ -59,12 +58,7 @@ const Admin = () => {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    <PartnersList 
-                        setRefresh={setRefresh} 
-                        partners={partners} 
-                        connectedUser={connectedUser} 
-                        
-                    />   
+                    <PartnersList partners={partners} />   
                 </Tbody>
                 <Tfoot>
                     <Tr>
@@ -90,12 +84,7 @@ const Admin = () => {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    <PartnersList 
-                        setRefresh={setRefresh} 
-                        partners={users} 
-                        connectedUser={connectedUser}
-                        
-                    />   
+                    <PartnersList partners={users} />   
                 </Tbody>
                 <Tfoot>
                     <Tr>

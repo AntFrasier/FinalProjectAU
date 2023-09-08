@@ -1,17 +1,28 @@
-import { Box, Heading } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
+import { Box, Heading, Table, Tr, Th, Thead, TableCaption, Tbody, Tfoot } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
 import PartnersList from '../component/PartnersList';
+import axios from '../api/axios';
 
-const Partners = ({backendUrl}) => {
+const Partners = () => {
+  const [partners, setPartners] = useState([]);
 
   useEffect(()=> {
     const abortController = new AbortController();
-    try {
-
-    } catch {
-
+    const getPartners = async () => {
+      try {
+        await axios.get("/partners").then( (response) => {
+          if (response.status === 200) {
+            console.log(response)
+            setPartners(response.data)
+          } 
+        }
+        )
+      } catch  (err) {
+        alert(err);
+      }
     }
 
+    getPartners();
     return ( ()=> {
       abortController.abort();
     })
@@ -19,7 +30,28 @@ const Partners = ({backendUrl}) => {
   return (
     <Box>
         <Heading as={"h2"}> Here are our amazing parters :</Heading>
-        <PartnersList backendUrl={backendUrl} />
+        <Table key={"id1"} variant='striped'>
+                <TableCaption>Manage Partners</TableCaption>
+                <Thead>
+                    <Tr>
+                        <Th>Name</Th>
+                        <Th>Address</Th>
+                        <Th>WebSite</Th>
+                        <Th>Role</Th>
+                    </Tr>
+                </Thead>
+                <Tbody>
+                    <PartnersList partners={partners} />   
+                </Tbody>
+                <Tfoot>
+                    <Tr>
+                    <Th>Name</Th>
+                        <Th>Address</Th>
+                        <Th>WebSite</Th>
+                        <Th>Role</Th>
+                    </Tr>
+                </Tfoot>
+            </Table>
     </Box>
   )
 }

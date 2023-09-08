@@ -59,6 +59,17 @@ async function getPartners(req, res) {
     }
 }
 
+async function getOnePartner(req, res) { 
+    // try {
+    //     const partners = await User.find({role : 2002}).exec();
+    //     res.status(200).send(partners)
+       
+    // } catch (err) {
+    //     console.error(err);
+    //     res.status(500).send({message : `serveur erreur : ${err}`});
+    // }
+}
+
 // @desc Get all users whith members role 
 // @route Post /user/members
 async function getMembers(req, res) { 
@@ -86,4 +97,4 @@ async function deleteUser(req, res) {
     }
 }
 
-module.exports = { RegisterUser, getUser, getPartners, getMembers, deleteUser };
+module.exports = { RegisterUser, getUser, getPartners, getMembers, deleteUser, getOnePartner };

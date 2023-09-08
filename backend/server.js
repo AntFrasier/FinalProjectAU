@@ -24,6 +24,7 @@ app.use(cookieParser());
 app.use('/login', require('./routes/loginRoutes'))
 app.use('/register', require('./routes/registerRoutes'));
 app.use('/refresh', require('./routes/refreshRoutes'));
+app.use('/partners', require('./routes/partnersRoutes'));
 
 //routes protected by jwt verification
 app.use(verifyJWT);
