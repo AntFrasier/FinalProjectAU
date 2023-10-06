@@ -10,16 +10,26 @@ import {
   w3mProvider ,
 } from "@web3modal/ethereum";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { goerli } from "wagmi/chains";
+import { goerli, hardhat } from "wagmi/chains";
 import { Web3Modal } from "@web3modal/react";
 import { AuthProvider } from './context/AuthProvider';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { publicProvider } from 'wagmi/providers/public';
 
 
-const chains = [goerli];
+const chains = [hardhat,goerli];
+const apiKey = import.meta.env.VITE_ALCHEMY_API_KEY;
 
 const projectId = '34a5caafeb6d780a6b52114437dd57b6' //todo move it to env variables.
 
-const { publicClient } = configureChains(chains, [w3mProvider({ projectId })])
+const { publicClient } = configureChains(
+  chains, 
+  [
+    w3mProvider({ projectId }),
+    alchemyProvider({ apiKey: 'yourAlchemyApiKey' }),
+    publicProvider(),
+
+  ])
 const wagmiConfig = createConfig({
   autoConnect: true,
   connectors: w3mConnectors({ projectId, chains }),
