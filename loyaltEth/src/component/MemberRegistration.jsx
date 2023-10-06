@@ -14,6 +14,7 @@ import { Web3Button } from "@web3modal/react";
 import { useAccount, useWalletClient, useSignMessage } from 'wagmi';
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import axios from '../api/axios';
 
 
 
@@ -34,7 +35,7 @@ const MemberRegistration = ({login}) => {
     // console.log(signature);
     try {
       // await AccordionButton.
-      await axiosPrivate.post("/register", { 
+      await axios.post("/register", { 
         user : { name : name,
                  address: address,
                  role:1001,
@@ -46,7 +47,8 @@ const MemberRegistration = ({login}) => {
       })
       
     } catch(err){
-      switch (err.response.status) {
+      console.log(err)
+      switch (err.response?.status) {
         case 409 : 
           console.log(err.response.data.data)
           login(address);

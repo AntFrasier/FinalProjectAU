@@ -13,7 +13,7 @@ import { Web3Button } from "@web3modal/react";
 //import axios from "../api/axios";
 import { useAccount, useWalletClient, useSignMessage  } from 'wagmi';
 import { useNavigate } from "react-router-dom";
-import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import axios from '../api/axios';
 
 
 
@@ -39,7 +39,7 @@ const PartnerRegistration = ({login}) => {
     // console.log(signedMessage);
     try {
       // await AccordionButton.
-      await axiosPrivate.post("/register", {
+      await axios.post("/register", {
         user : { name : name,
                  address: address,
                  role:2002,
