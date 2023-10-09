@@ -4,7 +4,7 @@ import Addcampagn from "./AddCampagn";
 import CreateCampagnModal from "./CreateCampagnModal";
 import {useAccount, useContractRead} from "wagmi";
 import contractsData from "../artifacts/deployedContracts";
-import { useContractWrite, usePrepareContractWrite } from 'wagmi'
+
  
 
 const Campaigns = () => {
@@ -47,12 +47,7 @@ const Campaigns = () => {
         }
         })
 
-    const { config } = usePrepareContractWrite({
-        address: contractsData.LoyaltEthFactory.address,
-        abi: contractsData.LoyaltEthFactory.abi,
-        functionName: 'CreateNewLoyaltEthProgramme',
-    })
-    const { data, isLoading, isSuccess, write } = useContractWrite(config)
+  
 
 
 
@@ -88,12 +83,8 @@ const Campaigns = () => {
                 }
                 <ListItem><Addcampagn setModal={setModal} modal={modal}/></ListItem>
             </List>
-            <button disabled={!write} onClick={() => write?.()}>
-                Create
-            </button>
-            {isLoading && <div>Check Wallet</div>}
-            {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
-            {modal? <CreateCampagnModal setModal={setModal} /> : null}
+           
+            {modal? <CreateCampagnModal setModal={setModal} contractsData={contractsData}/> : null}
         </>
     )
 }
