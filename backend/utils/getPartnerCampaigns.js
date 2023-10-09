@@ -27,7 +27,8 @@ const getPartnerCampaigns = async(add) => {
 // @param : address of the owner 
 const getLastPartnerCampaigns = async (add) => {
     const myContracts = await getPartnerCampaigns(add);
-    if (myContracts.length >= 1) myContracts[myContracts.length - 1 ];
+    
+    if (myContracts.length >= 1) return myContracts[myContracts.length - 1 ];
     return null;
 }
 

@@ -9,7 +9,7 @@ const {getLastPartnerCampaigns} = require("../utils/getPartnerCampaigns");
 async function getAll (req, res) {
     try {
     const campaigns = await Campaign.find().exec();
-    res.status(200).send({campaigns})
+    return res.status(200).send({campaigns})
     } catch (err) {
         res.status(500).send({message : `serveur erreur : ${err}`})
     }
@@ -19,9 +19,25 @@ async function getAll (req, res) {
 // @route Get /campaign/partner/:id
 async function getPartnersCampaigns (req, res) {
     const { id } = req.params
-    const existUser = await User.findOne({address : id}).exec();
     try {
-    const campaigns = await Campaign.find({user : existUser}).exec();
+        const existUser = await User.findOne({address : id}).exec();
+        if (!existUser) return res.status(204).send({message :" no user found"});
+        const campaigns = await Campaign.find({user : existUser}).exec();
+        if (!campaigns) return res.status(204).send({message :" no campaign found"});
+        res.status(200).send({campaigns});
+    } catch (err) {
+        res.status(500).send({message : `serveur erreur : ${err}`})
+    }
+}
+
+// @desc Get a campaign from its ID
+// @route Get /campaign/:id
+async function getCampaign (req, res) {
+    const { id } = req.params
+    try {
+        const existCampaign = await Campaign.findOne({_id : id}).exec();
+        if (!existCampaign) return res.status(204).send({message :" no campaign found"});
+        res.status(200).send({campaign: existCampaign});
     } catch (err) {
         res.status(500).send({message : `serveur erreur : ${err}`})
     }
@@ -30,6 +46,7 @@ async function getPartnersCampaigns (req, res) {
 
 // @desc Create a campaign
 // @route Post /campaign
+//@todo throw an error if the campaign allready exist ?
 async function createCampaign(req, res) {
     const { user, campaign } = req.body;
     if (!user) return res.status(400).send({message : "user Required"});
@@ -38,7 +55,7 @@ async function createCampaign(req, res) {
     if (!existUser) return res.status(403).send({message: "Must be registred"});
     try {
         const myContracts = await getLastPartnerCampaigns(existUser.address);
-        if (myContracts) res.status(404).send({message: "No contract found, please deployed contracts first"})
+        if (!myContracts) return res.status(404).send({message: "No contract found, please deployed contracts first"})
         const result = await Campaign.create ({
             "user" : existUser,
             "name": campaign.name,
@@ -59,6 +76,7 @@ async function createCampaign(req, res) {
     }
 
 }
+
 // @desc Delete a campaign
 // @route Delete /campaign:id
 async function deleteCampaign(req, res) {
@@ -76,4 +94,4 @@ async function patchCampaign(req, res) {
    
 // }
 
-module.exports = { createCampaign, getAll, getPartnersCampaigns };
+module.exports = { createCampaign, getAll, getPartnersCampaigns, getCampaign };
