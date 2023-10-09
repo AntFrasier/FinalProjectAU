@@ -1,90 +1,61 @@
-import { List, ListItem } from "@chakra-ui/react";
+import { Box, List, ListItem, Flex} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import Addcampagn from "./AddCampagn";
-import CreateCampagnModal from "./CreateCampagnModal";
+import Addcampaign from "./AddCampaign";
+import CreateCampaignModal from "./CreateCampaignModal";
 import {useAccount, useContractRead} from "wagmi";
 import contractsData from "../artifacts/deployedContracts";
-
- 
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { Outlet, Link } from "react-router-dom";
+import Campaign from "./Campaign";
 
 const Campaigns = () => {
 
-    const {address, isConnected} = useAccount();
-    const [campagns, setCampagns] = useState(null);
+    const {address, isConnected, isLoading} = useAccount();
+    const [campaigns, setCampaigns] = useState(null);
+    const [campaignToShow, setCampaignToShow] = useState(null);
     const [modal, setModal] = useState(false);
+    const axiosPrivate = useAxiosPrivate();
     
-    // const LoyaltEthContract = useContract({
-    //     address:contractsData.LoyaltEthFactory.address,
-    //     abi: contractsData.LoyaltEthFactory.abi,
-    //     })
-    const getMyContracts= (indexes, allContractsAdresses) => {
-        console.log(allContractsAdresses,"allconrtacts")
-        const myCampagns = [];
-        for (let i=0; i<indexes.length; i++){
-            myCampagns.push([allContractsAdresses[0][indexes[i]], allContractsAdresses[1][indexes[i]]])
-            console.log("mycampagns ",myCampagns)
+    useEffect(()=>{
+        async function getCampaigns(){
+            const response = await axiosPrivate.get(`/campaign/partner/${address}`)
+            setCampaigns(response.data.campaigns)
         }
-        setCampagns(myCampagns)
-    }
-
-    const {data:allContractsAdresses} = useContractRead({
-        address:contractsData.LoyaltEthFactory.address,
-        abi: contractsData.LoyaltEthFactory.abi,
-        functionName:"getContractArray",
-        onError: (err) => console.log(err),
-        onSuccess: (allContractsAdresses) => console.log("success data :",allContractsAdresses)
-        })
-
-    const {data:indexes} = useContractRead({
-        address:contractsData.LoyaltEthFactory.address,
-        abi: contractsData.LoyaltEthFactory.abi,
-        functionName:"getIndexes",
-        args:[address],
-        onError: (err) => console.log(err),
-        onSuccess: (indexes) => {
-            console.log("success data :",indexes);
-            getMyContracts(indexes,allContractsAdresses)
+        const controller =new AbortController();
+        if (isConnected){
+        getCampaigns();
         }
-        })
-
-  
-
+        return () => controller.abort(); 
+    },[address, isLoading, isConnected, modal])
 
 
-    // console.log(LoyaltEthContract)
-    // console.log(client)
-    
-        // useEffect( () => {
-        //     if(data) {
-        //     for (let i=0; i<data, i++){
-        //         const {data:test} = useContractRead({
-        //             address:contractsData.LoyaltEthFactory.address,
-        //             abi: contractsData.LoyaltEthFactory.abi,
-        //             functionName:"ownerIndexes",
-        //             args:[address, i],
-        //             onError: (err) => console.log(err),
-        //             onSuccess: (test) => console.log("success data :",test)
-        //             })
-        //     }
-        //     console.log(array)
-        // }
-        // },[isSuccess,isLoading, isError])
-
-
-    console.log(campagns)
+    // console.log(campagns)
     return ( 
         <>
             <List display="flex" gap={3}>
-                {campagns === null ? ( 
-                    <ListItem>no Campagn</ListItem> 
+                {campaigns == null || campaigns.length == 0 ? ( 
+                    <ListItem>no Campaign</ListItem> 
                 ) : (
-                    campagns?.map( campagn => <ListItem key={campagn[0]}>{campagn[0]} {campagn[1]}</ListItem>)
-                ) 
+                    campaigns?.map( campaign => 
+
+                        <ListItem key={campaign._id} onClick={()=> setCampaignToShow(campaign)}>
+                            <Flex direction={"column"}>
+                                <p>Name : {campaign.name}</p>
+                                <p>Website: {campaign.website}</p>
+                                <p>NftAddress: {campaign.NFTContractAddress}</p>
+                                <p>Vendor contract Adresse: {campaign.contractAddress}</p>
+                                <p>Paiement Adresse: {campaign.PayementAddress}</p>
+                            </Flex>
+                            
+                        </ListItem>
+
+                ) )
                 }
-                <ListItem><Addcampagn setModal={setModal} modal={modal}/></ListItem>
             </List>
+                <Addcampaign setModal={setModal} modal={modal}/>
            
-            {modal? <CreateCampagnModal setModal={setModal} contractsData={contractsData}/> : null}
+            {modal? <CreateCampaignModal setModal={setModal} contractsData={contractsData}/> : null}
+            {campaignToShow? <Campaign campaign={campaignToShow} contractsData={contractsData}/> : null}
         </>
     )
 }
