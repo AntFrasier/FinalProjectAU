@@ -9,8 +9,6 @@ const User = () => {
     const auth = useAuth();
 
     useEffect ( () => {
-        console.log("user in the user page : ", auth.auth.user);
-        console.log(auth.auth)
         const connectedUser = auth.auth.user;
         if(connectedUser?.role) {
             switch (connectedUser.role) {

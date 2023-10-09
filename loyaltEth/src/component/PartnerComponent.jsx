@@ -1,13 +1,12 @@
 import { Flex, Heading, Text } from '@chakra-ui/react'
 import React from 'react'
-import Campagns from './Campagns';
+import Campaigns from './Campaigns';
 import useAuth from '../hooks/useAuth';
 
 const PartnerComponent = () => {
   const { auth } = useAuth();
   const user = auth?.user;
 
-  console.log(user, auth.auth)
   return (
     <>
       <Flex direction={"column"}>
@@ -17,8 +16,9 @@ const PartnerComponent = () => {
           
       </Flex>
       <Flex direction={"column"}>
-        <Heading as={"h2"}>Your campagns :</Heading>
-        <Campagns />
+        <Heading as={"h2"}>Your campaigns :</Heading>
+        <Campaigns />
+
       </Flex>
     </>
   )

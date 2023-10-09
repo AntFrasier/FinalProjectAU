@@ -122,9 +122,6 @@ function App() {
       if (isReconnected) {
         const connectedUser = JSON.parse( localStorage.getItem("connectedUser"))
         setAuth({user : connectedUser});
-        console.log("allready connected" , connectedUser, auth);
-        
-        // setAuth(auth.auth.user);
       } else {
         login(address);
       }

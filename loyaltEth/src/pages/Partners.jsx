@@ -12,7 +12,6 @@ const Partners = () => {
       try {
         await axios.get("/partners").then( (response) => {
           if (response.status === 200) {
-            console.log(response)
             setPartners(response.data)
           } 
         }
