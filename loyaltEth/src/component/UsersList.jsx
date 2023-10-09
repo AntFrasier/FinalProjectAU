@@ -21,7 +21,7 @@ const UsersList = ({backendUrl, connectedUser}) => {
         }
 
         getUsers();
-
+        return () => abortController.abort
     }, [])
     
     return (
