@@ -12,24 +12,52 @@ import {
     Button,
   } from '@chakra-ui/react';
 // import { useContractRead , useClient } from 'wagmi';
-import contracts from "../artifacts/deployedContracts";
 import { useEffect } from "react";
-import { useContractWrite, usePrepareContractWrite } from 'wagmi';
+import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi';
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 
-const CreateCampaignModal = ({setModal, contractsData}) => {
+
+const CreateCampaignModal = ({setModal, contractsData, partnerAddress}) => {
     const [campaignName,setCampaignName] =useState("");
     const [website,setWebsite] =useState("");
+    const axiosPrivate = useAxiosPrivate();
+    const {address, isConnected} = useAccount();
+
 
     const { config } = usePrepareContractWrite({
         address: contractsData.LoyaltEthFactory.address,
         abi: contractsData.LoyaltEthFactory.abi,
         functionName: 'CreateNewLoyaltEthProgramme',
     })
-    const { data, isLoading, isSuccess, write } = useContractWrite(config);
+    const { data, isLoading, isSuccess, write, isError, error } = useContractWrite(config);
 
     useEffect(()=> {
+        async function registerCampaign(){
+            console.log("sending the post request :" ,address, campaignName, website)
+            try{
 
+             await axiosPrivate.post("/campaign",{
+                user:{
+                    address: address,
+                },
+                campaign:{
+                    name:campaignName,
+                    website:website
+                }
+             }).then((response) => {
+                console.log(response)
+                setModal(false);
+             })
+            } catch (err) {
+                console.log("there was an error while register the campaign in DB : ",err)
+            }
+        }
+        const controller =new AbortController();
+        if (isSuccess&&isConnected){
+            registerCampaign();
+        }
+        return () => controller.abort(); 
     },[isLoading,isSuccess])
 
     return (
