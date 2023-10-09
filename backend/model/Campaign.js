@@ -11,28 +11,22 @@ const campaignSchema = new Schema ( {
         type: String,
         required: true,
     },
-    // contractAddress: {
-    //     type: String,
-    //     required: true,
-    // },
-    // PayementAddress: {
-    //     type: String,
-    //     required: true,
-    // },
-    // NFTAddress: {
-    //     type: String,
-    //     required: true,
-    // },
-    // metadata: {
-    //     duration:{
-    //         type: Number,
-    //         require: true,
-    //     },
-    //     discount:{
-    //         type: Number,
-    //         require: true,
-    //     },
-    // }
+    website: {
+        type: String,
+    },
+    PayementAddress: {
+        type: String,
+        required: true,
+    },
+    NFTContractAddress: {
+        type: String,
+        required: true,
+    },
+    contractAddress: {
+        type: String,
+        required: true,
+    },
+    //@todo it will be better if the discount, the required date is stored here!
 });
 
 module.exports = mongoose.model('Campaign', campaignSchema);

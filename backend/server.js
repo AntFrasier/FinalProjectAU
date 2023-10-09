@@ -21,6 +21,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 //routes non protected by jwt:
+
 app.use('/login', require('./routes/loginRoutes'))
 app.use('/register', require('./routes/registerRoutes'));
 app.use('/refresh', require('./routes/refreshRoutes'));
