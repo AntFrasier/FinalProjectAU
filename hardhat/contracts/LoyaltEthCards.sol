@@ -45,9 +45,18 @@ contract LoyaltEthCards is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     mapping(uint256 => bool) public tokenIsActive; 
     mapping(uint256 => Metadata) public tokenIdMetadata;
     PartnerVendorContract public partnerVendorContract; //@todo set to private after tests
+     uint8 public required;
+    string public url;
+    uint256 public validity;
+    uint8 public percent;
 
-    constructor(address _factoryAddress) ERC721("LoyaltEthCard", "LETH") { //should pass the oracle contract address in the constructor for eth price
+    constructor(address _factoryAddress, uint8 _required, string memory _url, uint256 _validity, uint8 _percent) ERC721("LoyaltEthCard", "LETH") { //should pass the oracle contract address in the constructor for eth price
+        require ((_percent < 100) && (_percent > 0), "put a number between 1 and 99");
         factoryAddress=_factoryAddress;
+        required = _required; 
+        url = _url; 
+        validity = _validity;
+        percent = _percent;
     } 
 
     modifier onlyFactory (){ 
@@ -180,20 +189,15 @@ contract LoyaltEthCards is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     }
 
     /*@params 
-    * address eth address
-    * _required: number of iteration before the reward can be withdraw
-    * url: the url of the service that is proposed by the partner
-    * validity: duration of validity 'in days' (if the card is not full befor the validity, the partner can withdraw the reward, if the card is full befor the deadLine the customer can withdraw his reward)
-    * _percent: the percentage of cashBack that you get if you use _required times before the deadLine
+    * address _to eth address
     */
-     function mint(address _to, uint8 _required, string memory _url, uint256 _validity, uint8 _percent) public onlyOwner {
-        require ((_percent < 100) && (_percent > 0), "put a number between 1 and 99");
+     function mint(address _to) public onlyOwner {
         _tokenIds.increment(); //start with id 1 
         uint256 newItemId = _tokenIds.current();
         _safeMint(_to, newItemId);
         tokenIsActive[newItemId] = true;
-        uint256 deadLine = (block.timestamp) + (_validity * 60 * 60 * 24);
-        metadata = Metadata (_url, _required, _validity, deadLine, _percent);
+        uint256 deadLine = (block.timestamp) + (validity * 60 * 60 * 24);
+        metadata = Metadata (url, required, validity, deadLine, percent);
         tokenIdMetadata[newItemId] = metadata;
         _setTokenURI(newItemId, getTokenURI(newItemId));
     }

@@ -16,8 +16,8 @@ import "./PartnerVendorContract.sol";
 
     event NewLoyaltEthProgrammeCreated(address LoyaltEthCardsContractAddress, address PartnerVendorContractAddress);
 
-     function CreateNewLoyaltEthProgramme() public {
-        LoyaltEthCards loyaltEthCards = new LoyaltEthCards(address(this));
+      function CreateNewLoyaltEthProgramme(uint8 _required, string memory _url, uint256 _validity, uint8 _percent) external {
+        LoyaltEthCards loyaltEthCards = new LoyaltEthCards(address(this), _required, _url, _validity, _percent);
         loyaltEthCards.transferOwnership(msg.sender);
         LoyaltEthCardsArray.push(loyaltEthCards);
         PartnerVendorContract partnerVendorContract = new PartnerVendorContract(address(loyaltEthCards));
