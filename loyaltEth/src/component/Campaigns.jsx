@@ -5,7 +5,6 @@ import CreateCampaignModal from "./CreateCampaignModal";
 import {useAccount, useContractRead} from "wagmi";
 import contractsData from "../artifacts/deployedContracts";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import { Outlet, Link } from "react-router-dom";
 import Campaign from "./Campaign";
 
 const Campaigns = () => {
@@ -15,6 +14,8 @@ const Campaigns = () => {
     const [campaignToShow, setCampaignToShow] = useState(null);
     const [modal, setModal] = useState(false);
     const axiosPrivate = useAxiosPrivate();
+
+    
     
     useEffect(()=>{
         async function getCampaigns(){

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
-import { Box, Button, Flex, FormControl, InputGroup, FormLabel, Input, Text } from '@chakra-ui/react';
-import { useContractWrite, usePrepareContractWrite } from 'wagmi';
+import { Box, Button, Flex, FormControl, InputGroup, FormLabel, Input, Text, Heading } from '@chakra-ui/react';
+import { useBalance, useContractRead, useContractWrite, usePrepareContractWrite } from 'wagmi';
 
 const Campaign = ({campaign, contractsData}) => {
     const {id} = useParams();
@@ -12,9 +12,29 @@ const Campaign = ({campaign, contractsData}) => {
     const [_url, setUrl] = useState("");
     const [_validity, setValidity] = useState(365);
     const [_percent, setPercent] = useState(10);
+    const [myBalance, setMyBalance] = useState(0);
+    const [NftSupply, setNftSupply] = useState(0);
     // const [campaign, setCampaign] = useState(null);
 
-    const { config } = usePrepareContractWrite({
+    const {data:owner, isSuccess: readSuccess} = useContractRead({
+        address: campaign?.contractAddress,
+        abi: contractsData.PartnerVendorContract.abi,
+        functionName: 'owner',
+    })
+
+    const supply = useContractRead({
+        address: campaign?.NFTContractAddress,
+        abi: contractsData.LoyaltEthCards.abi,
+        functionName: 'totalSupply',
+        onSuccess(data){ setNftSupply (Number(data))},
+    })
+    
+    const balance = useBalance({
+        address: campaign?.contractAddress,
+        onSuccess(data){ setMyBalance( data.formatted)},
+      })
+
+    const { config:mintConfig } = usePrepareContractWrite({
         address: campaign?.NFTContractAddress,
         abi: contractsData.LoyaltEthCards.abi,
         functionName: 'mint',
@@ -26,36 +46,23 @@ const Campaign = ({campaign, contractsData}) => {
             _percent, //the percentage cashBack proposed
         ]
     })
-    const { data, isLoading, isSuccess, write, isError, error } = useContractWrite(config);
-
-    useEffect(()=>{
-        // const controller = new AbortController();
-        // async function getCampaign(){
-        //     try {
-        //         await axiosPrivate(`/campaign/${id}`)
-        //         .then((response) => {
-        //             console.log (response);
-        //             setCampaign(response.data.campaign)
-        //         }
-        //             );
-        //     } catch (err) {
-        //         console.log (err)
-        //     }
-        // }
-        // getCampaign();
-        // return () => controller.abort();
-    },[id])
+    const { data, isLoading, isSuccess, write, isError, error } = useContractWrite(mintConfig);
 
   return (
     <div>
 
-        Campaign {id}
         {campaign ? (
-            <Flex direction={"column"} maxW={450} gap={5}>
-                <Box>
-                {campaign.name}
-                {campaign.website}
-                </Box>
+            <Flex direction={"column"} maxW={550} gap={5} border={"solid 1px"} borderRadius={"10px"} padding={10} margin={10}>
+                <Flex direction={"row"} justify={"space-between"} alignItems={"flex-end"}>
+                    <Heading as={"h4"} >
+                        {campaign.name}
+                    </Heading>
+                    <a href={`https://${campaign.website}`} target='_blank' rel='nofollow no referre noopener'>
+                        {campaign.website}
+                    </a>
+                </Flex>
+                <Text>Total Nfts : {NftSupply}</Text>
+                <Text>Balance : {myBalance} Ξ</Text>
                 <FormControl maxW={350} alignSelf={"center"}>
                     <FormLabel>Mint to ?</FormLabel>
                     <Input 
