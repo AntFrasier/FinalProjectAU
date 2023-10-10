@@ -54,20 +54,21 @@ async function createCampaign(req, res) {
     const existUser = await User.findOne({address : user.address}).exec();
     if (!existUser) return res.status(403).send({message: "Must be registred"});
     try {
-        const myContracts = await getLastPartnerCampaigns(existUser.address);
+        const myContracts = await getLastPartnerCampaigns(existUser.address); //get the last created nft and vendor contracts
         if (!myContracts) return res.status(404).send({message: "No contract found, please deployed contracts first"})
         const result = await Campaign.create ({
             "user" : existUser,
             "name": campaign.name,
             "website": campaign.website,
-            "PayementAddress": existUser.address,
-            "NFTContractAddress": myContracts[0],
-            "contractAddress": myContracts[1],
-            //@todo add the required number of use
-            //@todo add the avaibility (in days)
-            //@todo add the disocunt proposed
-            
+            "description": campaign.description,
+            "payementAddress": existUser.address,
+            "nFTContractAddress": myContracts[0],
+            "vendorContractAddress": myContracts[1],
+            "required": campaign.required,
+            "validity": campaign.validity,
+            "percent": campaign.percent,
         })
+
         console.log(result);
         res.status(201).send({message : `New campaign ${campaign.name} created.`})
     } catch (err) {

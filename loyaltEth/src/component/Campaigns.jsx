@@ -43,9 +43,10 @@ const Campaigns = () => {
                             <Flex direction={"column"}>
                                 <p>Name : {campaign.name}</p>
                                 <p>Website: {campaign.website}</p>
-                                <p>NftAddress: {campaign.NFTContractAddress}</p>
-                                <p>Vendor contract Adresse: {campaign.contractAddress}</p>
-                                <p>Paiement Adresse: {campaign.PayementAddress}</p>
+                                <p>Description: {campaign.description}</p>
+                                <p>NftAddress: {campaign.nFTContractAddress}</p>
+                                <p>Vendor contract Adress: {campaign.vendorContractAddress}</p>
+                                <p>Paiement Adress: {campaign.payementAddress}</p>
                             </Flex>
                             
                         </ListItem>

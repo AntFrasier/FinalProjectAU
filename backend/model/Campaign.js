@@ -14,16 +14,31 @@ const campaignSchema = new Schema ( {
     website: {
         type: String,
     },
-    PayementAddress: {
+    description: {
+        type: String,
+    },
+    payementAddress: {
         type: String,
         required: true,
     },
-    NFTContractAddress: {
+    nFTContractAddress: {
         type: String,
         required: true,
     },
-    contractAddress: {
+    vendorContractAddress: {
         type: String,
+        required: true,
+    },
+    required: {
+        type: Number,
+        required: true,
+    },
+    validity: {
+        type: Number,
+        required: true,
+    },
+    percent: {
+        type: Number,
         required: true,
     },
     //@todo it will be better if the discount, the required date is stored here!

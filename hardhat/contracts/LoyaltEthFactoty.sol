@@ -16,6 +16,12 @@ import "./PartnerVendorContract.sol";
 
     event NewLoyaltEthProgrammeCreated(address LoyaltEthCardsContractAddress, address PartnerVendorContractAddress);
 
+    /*@Params
+    *_required: number of iteration before the reward can be withdraw
+    * url: the url of the service that is proposed by the partner
+    * validity: duration of validity 'in days' (if the card is not full befor the validity, the partner can withdraw the reward, if the card is full befor the deadLine the customer can withdraw his reward)
+    * _percent: the percentage of cashBack that you get if you use _required times before the deadLine
+    */
       function CreateNewLoyaltEthProgramme(uint8 _required, string memory _url, uint256 _validity, uint8 _percent) external {
         LoyaltEthCards loyaltEthCards = new LoyaltEthCards(address(this), _required, _url, _validity, _percent);
         loyaltEthCards.transferOwnership(msg.sender);
