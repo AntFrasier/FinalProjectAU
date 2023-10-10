@@ -198,7 +198,7 @@ contract LoyaltEthCards is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     /*@params 
     * address _to eth address
     */
-     function mint(address _to) public onlyOwner {
+     function mint(address _to) external {
         _tokenIds.increment(); //start with id 1 
         uint256 newItemId = _tokenIds.current();
         _safeMint(_to, newItemId);
