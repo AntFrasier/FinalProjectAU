@@ -26,12 +26,13 @@ app.use('/login', require('./routes/loginRoutes'))
 app.use('/register', require('./routes/registerRoutes'));
 app.use('/refresh', require('./routes/refreshRoutes'));
 app.use('/partners', require('./routes/partnersRoutes'));
+app.use('/campaign', require('./routes/campaignRoutes'));
 
 //routes protected by jwt verification
 app.use(verifyJWT);
 app.use("/logout", require('./routes/logoutRoutes'));
 app.use('/user', require('./routes/userRoutes'));
-app.use('/campaign', require('./routes/campaignRoutes'));
+
 
 mongoose.connection.once("open", () => {
     console.log("connected to Database");
