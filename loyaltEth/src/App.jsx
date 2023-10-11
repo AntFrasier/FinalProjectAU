@@ -26,6 +26,7 @@ import AdminComponent from "./component/AdminComponent";
 import Partners from "./pages/Partners";
 import Admin from "./pages/Admin";
 import useAxiosPrivate from "./hooks/useAxiosPrivate";
+import CampaignsAvailable from "./pages/CampaignsAvailable";
 
 
 const colors = {
@@ -142,6 +143,7 @@ function App() {
           <Routes>
               <Route path="/home" element = {<Index isConnecting={isConnecting}/>}/> 
               <Route path="/about" element = {<About />} />
+              <Route path="/campaigns" element = {<CampaignsAvailable />} />
               <Route path="/partners" element = {<Partners />} />
 
               <Route path="/register"  >

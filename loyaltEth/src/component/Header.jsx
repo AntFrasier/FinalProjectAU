@@ -19,6 +19,9 @@ return (
                 <Link to="/about" cursor="pointer">
                     About
                 </Link>
+                <Link to="/campaigns" cursor="pointer">
+                    Campaigns
+                </Link>
                 <Link to="/partners" cursor="pointer">
                     Partners
                 </Link>

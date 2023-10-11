@@ -2,16 +2,18 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { Box, Button, Flex, FormControl, InputGroup, FormLabel, Input, Text, Heading } from '@chakra-ui/react';
-import { useBalance, useContractRead, useContractWrite, usePrepareContractWrite } from 'wagmi';
+import { useAccount, useBalance, useContractRead, useContractWrite, usePrepareContractWrite } from 'wagmi';
+import contractsData from "../artifacts/deployedContracts";
+import { Web3Button } from '@web3modal/react';
 /*@todo
 *
 * Add the Nfts that are expired and can be withdraw bye the partner
 *
 */
-const Campaign = ({campaign, contractsData}) => {
-    const {id} = useParams();
+const Campaign = ({campaign}) => {
+    const {isConnected}= useAccount();
     const axiosPrivate = useAxiosPrivate();
-    const [_to, setTo] =useState("0xB810b728E44df56eAf4Da93DDd08168B3660753f");
+    const [_to, setTo] =useState();
     const [myBalance, setMyBalance] = useState(0);
     const [NftSupply, setNftSupply] = useState(0);
     // const [campaign, setCampaign] = useState(null);
@@ -34,7 +36,7 @@ const Campaign = ({campaign, contractsData}) => {
         onSuccess(data){ setMyBalance( data.formatted)},
       })
 
-    const { config:mintConfig } = usePrepareContractWrite({
+    const { config:mintConfig, isError:prepIsError, error:prepError } = usePrepareContractWrite({
         address: campaign?.nFTContractAddress,
         abi: contractsData.LoyaltEthCards.abi,
         functionName: 'mint',
@@ -43,6 +45,10 @@ const Campaign = ({campaign, contractsData}) => {
         ]
     })
     const { data, isLoading, isSuccess, write, isError, error } = useContractWrite(mintConfig);
+
+    useEffect(()=>{
+        console.log(prepError, prepIsError)
+    },[prepError, prepIsError])
 
   return (
     <div>
@@ -67,7 +73,9 @@ const Campaign = ({campaign, contractsData}) => {
                         <Text>Number of use required : {campaign?.required}</Text>
                     </Box>
                 </Flex>
-                <FormControl maxW={350} alignSelf={"center"}>
+                <Text>{campaign?.description}</Text>
+                {isConnected? (
+                    <FormControl maxW={350} alignSelf={"center"}>
                     <FormLabel>Mint to ?</FormLabel>
                     <Input 
                         placeholder='Recipient address' 
@@ -80,13 +88,20 @@ const Campaign = ({campaign, contractsData}) => {
                         isLoading={isLoading}
                         colorScheme={'teal'} //test color theme
                         mt={35}
-                        disabled={!write}
-                         onClick={() => write?.()}
+                        isDisabled={prepIsError || write}
+                        onClick={() => write?.()}
                     >
                         Mint
                     </Button>
                     </Flex>
                     </FormControl>
+                ):(
+                    <Web3Button 
+                        icon="hide"
+                        balance="hide"
+                        />
+                )}
+                
             </Flex>
             ):(
             null)}
