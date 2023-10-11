@@ -1,5 +1,6 @@
 const express = require('express');
 const userController = require('../controllers/userController');
+const onlyAdmin = require("../middleware/onlyAdmin")
 
 const router = express.Router();
 
@@ -18,6 +19,6 @@ router.get('/:id', userController.getUser);
 //@Desc Delete 1 user/ partner 
 //@params address (:id) of the user to delete
 //@TODO : Should be accessible for only admin middelware ?
-router.delete('/:id', userController.deleteUser)
+router.delete('/:id', onlyAdmin, userController.deleteUser)
 
 module.exports = router; 

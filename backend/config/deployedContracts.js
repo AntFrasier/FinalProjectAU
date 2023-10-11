@@ -824,7 +824,7 @@ const contracts = {
       },
     ],
   },
-        LoyaltEthFactory: {
+  LoyaltEthFactory: {
           address: "0x0165878A594ca255338adfa4d48449f69242Eb8F",
           abi: [
             {
@@ -974,8 +974,8 @@ const contracts = {
               type: "function",
             },
           ],
-        },
-        PartnerVendorContract: {
+  },
+   PartnerVendorContract: {
           abi: [
             {
               inputs: [
@@ -1103,7 +1103,7 @@ const contracts = {
               type: "receive",
             },
           ],
-        },
+  },
 } 
 
 module.exports = contracts;
