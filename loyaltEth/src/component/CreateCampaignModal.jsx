@@ -62,7 +62,7 @@ const CreateCampaignModal = ({setModal, contractsData, partnerAddress}) => {
                 },
                 campaign:{
                     name:campaignName,
-                    website:website,
+                    website: "https://" + website,
                     required:required,
                     validity:validity,
                     percent:percent,

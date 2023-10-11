@@ -10,7 +10,8 @@ const PartnersList = ({partners}) => {
     const axiosPrivate = useAxiosPrivate();
     const { auth } = useAuth();
     
-    const deletePartner = async (address) => { //todo this soulf be moved somewhere eles
+    
+    const deletePartner = async (address) => { //todo this sould be moved somewhere elese ? 
          try {
                 const response = await axiosPrivate.delete(`/user/${address}`)
                 console.log("res from partnerList axios DELETE call" , response)
@@ -54,7 +55,7 @@ const PartnersList = ({partners}) => {
                 <Tr key={partner._id}>
                     <Td key={`${partner._id}name`}>{partner.name} </Td>
                     <Td key={`${partner._id}add`}>{partner.address}</Td>
-                    <Td key={`${partner._id}web`}>{partner.webSite}</Td>
+                    <Td key={`${partner._id}web`}><a href={partner.webSite} target="_blank">{partner.webSite}</a></Td>
                     <Td key={`${partner._id}role`}>{partner.role}</Td>
                     <Td key={`${partner._id}delete`}>{auth.user?.role == 3003 ? <Button onClick={ () => manageDelete(partner.address)}> delete</Button> : null}</Td>
                 </Tr>

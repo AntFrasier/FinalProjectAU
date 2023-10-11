@@ -44,7 +44,7 @@ const PartnerRegistration = ({login}) => {
         user : { name : name,
                  address: address,
                  role:2002,
-                 website: webSite,
+                 website: "https://" + webSite,
                  //signature: signedMessage,
       }}).then(response => {
         console.log(response);
