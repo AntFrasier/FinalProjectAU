@@ -11,16 +11,15 @@ const onlyAdmin = async (req, res, next) => {
             token,
             process.env.ACCESS_TOKEN_SECRET,
         )
-        console.log("decoded :",decoded); //todo do soomething with decoded ? 
         const admin = await User.findOne({ signedHash : decoded.signature}).exec();
-        const test = await User.findOne({address : "0xB810b728E44df56eAf4Da93DDd08168B3660753f"}).exec();
-        console.log ("admin : ",admin?.signedHash)
-        console.log ("test : ",test?.signedHash)
-        // console.log ("test : ",test)
-        if (!admin) return res.status(403).send({message : "FORBIDEN not an admin"})
-        // next();
-        console.log("USER ERASED")
-        return res.status(200)
+        if (admin?.role === 3003) next();
+        else {
+            console.log("USER ERASED")
+            return res.status(403).send({message : "FORBIDEN not an admin"})
+
+        }
+        
+       
 
     } catch (err) {
         console.log (err)
