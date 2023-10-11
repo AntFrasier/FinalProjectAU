@@ -91,7 +91,7 @@ const refresh = async (req, res) => {
             console.log("decoded : ", decoded)
             if (err || decoded.signature !== existUser.signedHash) return res.status(403).send({message : "decoded signature doesnt match ! UnAuthorized"})
             const accessToken = jwt.sign(
-                {"signature" : existUser.signature},
+                {"signature" : existUser.signedHash},
                 process.env.ACCESS_TOKEN_SECRET,
                 {expiresIn: "30s"}
             );
