@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Spinner, Text, useStatStyles } from '@chakra-ui/react';
+import { Button, Flex, Heading, Spinner, Text, Box } from '@chakra-ui/react';
 import PartnersList from './PartnersList';
 import useAuth from '../hooks/useAuth';
 import { useEffect, useState } from 'react';
@@ -39,9 +39,11 @@ const MemberComponent = () => {
         <Heading as={"h2"}> Member page :</Heading>
         <Heading mt={5} as={"h3"}>Welcome {user?.name}</Heading>  
         My Nfts :
-        {myNfts.map((nft)=> <img src={nft.rawMetadata.image} />)}
+        <Flex direction={"row"}>
+        {myNfts?.map((nft)=> <Box border={"1px solid"} borderRadius={"10px"} padding={10} margin={10}><img src={nft.rawMetadata.image} /></Box>)}
+        </Flex>
         {isLoading? <Spinner size={"xl"}/> : null}
-        <Text>Your Nft ar not listed here yet ? <Button isLoading={isLoading} onClick={() => searchMyNfts()}>Searche my Nfts</Button></Text>
+        {/* <Text>Your Nft ar not listed here yet ? <Button isLoading={isLoading} onClick={() => searchMyNfts()}>Searche my Nfts</Button></Text> */}
     </Flex>
   )
 }
