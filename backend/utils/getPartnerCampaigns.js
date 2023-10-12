@@ -10,7 +10,7 @@ const getPartnerCampaigns = async(add) => {
     const loyaltEthFactory = new Contract(
         contracts.LoyaltEthFactory.address,
         contracts.LoyaltEthFactory.abi,
-        myProvider()
+        myProvider
     )
     const array = await loyaltEthFactory.getContractArray();
     const indexes = await loyaltEthFactory.getIndexes( add );

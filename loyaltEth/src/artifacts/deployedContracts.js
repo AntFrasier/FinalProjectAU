@@ -825,7 +825,8 @@ const contracts = {
     ],
   },
   LoyaltEthFactory: {
-          address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+          address: "0xA18a269974Fd9Cb9827754317bfD7A1371c70066", //goerli testnet
+          //address: "0x5FbDB2315678afecb367f032d93F642f64180aa3", //local hardhat
           abi: [
             {
               anonymous: false,

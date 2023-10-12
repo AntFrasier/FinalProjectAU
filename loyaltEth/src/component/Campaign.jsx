@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { Box, Button, Flex, FormControl, InputGroup, FormLabel, Input, Text, Heading } from '@chakra-ui/react';
-import { useAccount, useBalance, useContractRead, useContractWrite, usePrepareContractWrite } from 'wagmi';
+import { useAccount, useBalance, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 import contractsData from "../artifacts/deployedContracts";
 import { Web3Button } from '@web3modal/react';
 /*@todo
@@ -16,6 +16,7 @@ const Campaign = ({campaign}) => {
     const [_to, setTo] =useState();
     const [myBalance, setMyBalance] = useState(0);
     const [NftSupply, setNftSupply] = useState(0);
+    const [isMining, setIsMining] = useState(false);
     // const [campaign, setCampaign] = useState(null);
 
     const {data:owner, isSuccess: readSuccess} = useContractRead({
@@ -29,12 +30,12 @@ const Campaign = ({campaign}) => {
         abi: contractsData.LoyaltEthCards.abi,
         functionName: 'totalSupply',
         onSuccess(data){ setNftSupply (Number(data))},
-    })
+    });
     
     const balance = useBalance({
         address: campaign?.vendorContractAddress,
         onSuccess(data){ setMyBalance( data.formatted)},
-      })
+      });
 
     const { config:mintConfig, isError:prepIsError, error:prepError } = usePrepareContractWrite({
         address: campaign?.nFTContractAddress,
@@ -43,12 +44,42 @@ const Campaign = ({campaign}) => {
         args:[
             _to, //address to (that will receiv the NFT)
         ]
-    })
-    const { data, isLoading, isSuccess, write, isError, error } = useContractWrite(mintConfig);
+    });
+
+    const mintNft = useContractWrite(mintConfig);
+
+    const hangleMintTx = async () => {
+        if(mintNft.writeAsync){
+            console.log("Minting.....");
+            try {
+                setIsMining(true);
+                await mintNft.writeAsync();
+                
+
+                } catch (err) {
+                    console.error(err);
+                    setIsMining(false);
+                  } 
+        } else {
+            console.error("Contract writer error. Try again.");
+        }
+    }
+
+    const waitTx = useWaitForTransaction({
+        hash: mintNft?.data?.hash
+    });
 
     useEffect(()=>{
-        console.log(prepError, prepIsError)
-    },[prepError, prepIsError])
+        if(waitTx.isError){
+            alert("There were an error while mining the Tx, please try again");
+            setIsMining(false);
+        }
+        if(waitTx.isSuccess){
+            //@todo handle the push to database nft address ?
+            console.log("Your NFT has been Minted")
+            setIsMining(false);
+        }
+    },[waitTx.isError, waitTx.isSuccess])
 
   return (
     <div>
@@ -85,11 +116,11 @@ const Campaign = ({campaign}) => {
                     />
                     <Flex justifyContent={'space-between'}>
                 <Button
-                        isLoading={isLoading}
+                        isLoading={isMining}
                         colorScheme={'teal'} //test color theme
                         mt={35}
-                        isDisabled={prepIsError || write}
-                        onClick={() => write?.()}
+                        isDisabled={prepIsError}
+                        onClick={() => hangleMintTx()}
                     >
                         Mint
                     </Button>

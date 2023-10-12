@@ -17,7 +17,7 @@ const userSchema = new Schema ( {
     webSite: String,
     signedHash: {
         type: String,
-        required: true,
+        required: false,
     },
     nonce: {
         type: Number,

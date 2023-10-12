@@ -27,7 +27,7 @@ const PartnerRegistration = ({login}) => {
   const {address, isConnected} = useAccount();
   const { data: signer } = useWalletClient();
   const { data, isError, isLoading, isSuccess, signMessageAsync } = useSignMessage()
-  const axiosPrivate = useAxiosPrivate();
+ 
 
 
 

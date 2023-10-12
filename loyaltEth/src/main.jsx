@@ -17,7 +17,7 @@ import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
 
-const chains = [hardhat,goerli];
+const chains = [goerli];
 const apiKey = import.meta.env.VITE_ALCHEMY_API_KEY;
 
 const projectId = '34a5caafeb6d780a6b52114437dd57b6' //todo move it to env variables.
@@ -26,7 +26,7 @@ const { publicClient } = configureChains(
   chains, 
   [
     w3mProvider({ projectId }),
-    alchemyProvider({ apiKey: 'yourAlchemyApiKey' }),
+    alchemyProvider({ apiKey: apiKey }),
     publicProvider(),
 
   ])

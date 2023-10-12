@@ -6,7 +6,7 @@ import {
 import { Box, Button, ChakraProvider } from '@chakra-ui/react';
 import { extendTheme } from '@chakra-ui/react';
 import { Web3Modal, Web3Button } from "@web3modal/react";
-import { configureChains, createConfig, WagmiConfig, useAccount, useSignMessage } from "wagmi";
+import { configureChains, createConfig, WagmiConfig, useAccount, useSignMessage, useDisconnect } from "wagmi";
 import { goerli } from "wagmi/chains";
 import useAuth from './hooks/useAuth';
 import Index from "./pages/Index";
@@ -48,13 +48,16 @@ const w3ModalProjectId = import.meta.env.VITE_W3MODAL_PROJECT_ID;
 const backendUrl = import.meta.env.VITE_BACKEND_ADDRESS || "//localhost:33550";
 
 function App() {
-  const { data, isError, isLoading, isSuccess, signMessageAsync } = useSignMessage()
-  const navigate = useNavigate();
   const [registred, setRegistred] = useState(false);
   const [connectedUser, setConnectedUser] = useState();
   const [isConnecting, setIsConnecting] = useState(false);
+
+  const { disconnect } = useDisconnect();
   const { setAuth, auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
+  const { data, isError, isLoading, isSuccess, signMessageAsync } = useSignMessage()
+  const navigate = useNavigate();
+
   async function getSigneMessage(userAddress) {
     const nonce = await axios.get(`/login/nonce/${userAddress}`) //get nonce from the back end to avoid duplicate signature loggIn
     console.log("nonce : ", nonce.data.data)
@@ -71,7 +74,6 @@ function App() {
         signature :userSignature
       }).then( (response) => {
         console.log ("response from the login backend :",response);
-        setIsConnecting(false);
         if (response.status == 200) {
             let user = response.data.data;
             user = { ...user, accessToken : response.data.accessToken };
@@ -88,12 +90,18 @@ function App() {
         }
       })
     } catch (err) {
-      alert(err)
+      alert(err);
+      setRegistred(false);
+      setAuth(null);
+      localStorage.removeItem("connectedUser");
+      disconnect();
+      navigate("/home");
+    } finally {
+      setIsConnecting(false);
     }
   }
 
   async function logout() {
-    
     try {
       const response = await axiosPrivate.get(`/logout/${auth.user.address}`)
         .then( (response) => {
@@ -126,8 +134,6 @@ function App() {
       } else {
         login(address);
       }
-      //todo check if user present, sign a message then test the message backend side 
-
     },
     
    

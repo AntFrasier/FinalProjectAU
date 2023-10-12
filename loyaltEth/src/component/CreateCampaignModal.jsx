@@ -14,7 +14,7 @@ import {
   } from '@chakra-ui/react';
 // import { useContractRead , useClient } from 'wagmi';
 import { useEffect } from "react";
-import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi';
+import { useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 
@@ -26,6 +26,7 @@ const CreateCampaignModal = ({setModal, contractsData, partnerAddress}) => {
     const [required, setRequired] = useState();
     const [validity, setValidity] = useState();
     const [percent, setPercent] = useState();
+    const [isMining, setIsMining] = useState(false);
     const axiosPrivate = useAxiosPrivate();
     const {address, isConnected} = useAccount();
 
@@ -35,7 +36,7 @@ const CreateCampaignModal = ({setModal, contractsData, partnerAddress}) => {
     * validity: duration of validity 'in days' (if the card is not full befor the validity, the partner can withdraw the reward, if the card is full befor the deadLine the customer can withdraw his reward)
     * percent: the percentage of cashBack that you get if you use _required times before the deadLine
     */
-    const { config } = usePrepareContractWrite({
+    const { config, isError } = usePrepareContractWrite({
         address: contractsData.LoyaltEthFactory.address,
         abi: contractsData.LoyaltEthFactory.abi,
         functionName: 'CreateNewLoyaltEthProgramme',
@@ -44,45 +45,71 @@ const CreateCampaignModal = ({setModal, contractsData, partnerAddress}) => {
             website,
             validity,
             percent,
-        ]
+        ],
+        
     })
-    const { data, isLoading, isSuccess, write, isError, error } = useContractWrite(config);
+    const createCampaignContracts = useContractWrite(config);
 
-    // const checkValidity = () => {
-    //     return !write&&NameValidity&&urlValidity&&actionValidity&&Validity
-    // }
-    useEffect(()=> {
-        async function registerCampaign(){
-            console.log("sending the post request :" ,address, campaignName, website)
-            try{
+    async function registerCampaign(){
+        console.log("sending the post request :" ,address, campaignName, website)
+        try{
 
-             await axiosPrivate.post("/campaign",{
-                user:{
-                    address: address,
-                },
-                campaign:{
-                    name:campaignName,
-                    website: "https://" + website,
-                    required:required,
-                    validity:validity,
-                    percent:percent,
-                    description:description,
+         await axiosPrivate.post("/campaign",{
+            user:{
+                address: address,
+            },
+            campaign:{
+                name:campaignName,
+                website: "https://" + website,
+                required:required,
+                validity:validity,
+                percent:percent,
+                description:description,
 
-                }
-             }).then((response) => {
-                console.log(response)
-                setModal(false);
-             })
-            } catch (err) {
-                console.log("there was an error while register the campaign in DB : ",err)
             }
+         }).then((response) => {
+            console.log("campaign registred in the dB ! ",response)
+            
+         })
+        } catch (err) {
+            console.log("there was an error while register the campaign in DB : ",err)
+        } finally {
+            setModal(false);
+            setIsMining(false);
         }
-        const controller =new AbortController();
-        if (isSuccess&&isConnected){
-            registerCampaign();
+    }
+
+    const handleTx = async () => {
+        if (createCampaignContracts.writeAsync) {
+            try {
+              setIsMining(true);
+              await createCampaignContracts.writeAsync()
+            //   console.log(createCampaignContracts.data)  
+            } catch (e) {
+              const message = e;
+              console.error(message);
+              setIsMining(false);
+            } 
+        } else {
+            console.error("Contract writer error. Try again.");
         }
-        return () => controller.abort(); 
-    },[isLoading,isSuccess])
+    }
+
+    const waitTx = useWaitForTransaction({ //wait for 1 validation can be set to more with confiramtions: x
+        hash: createCampaignContracts?.data?.hash
+    })
+
+    useEffect(()=> {
+       if(waitTx.isSuccess) {
+           console.log(waitTx);
+           registerCampaign();
+           
+       }
+       if(waitTx.isError) {
+           console.log(waitTx.error)
+           setIsMining(false);
+       }
+    },[waitTx.isSuccess, waitTx.isError])
 
     return (
         <>  <Flex position={"fixed"} top={0} w={"100vw"} h={"100vh"} bg={"rgba(0, 0, 0, 0.1)"} backdropFilter={"blur(15px)"} zIndex={999} justifyContent={"center"} alignContent={"center"}>
@@ -155,18 +182,18 @@ const CreateCampaignModal = ({setModal, contractsData, partnerAddress}) => {
                         <Flex justifyContent={'space-between'}>
                         {/* <Web3Button icon="hide" balance="hide" />  */}
                         <Button
-                            isLoading={isLoading}
+                            isLoading={isMining}
                             colorScheme={'teal'} //test color theme
                             mt={35}
-                            disabled={!write} //@todo add cheking validity ov the info befor sending the write command
-                            onClick={() => write?.()}
+                            isDisabled={isError} //@todo add cheking validity ov the info befor sending the write command
+                            onClick={() => handleTx()}
                         >
                             Create
                         </Button>
                         </Flex>
                     </FormControl>
-                {isLoading && <div>Check Wallet</div>}
-                {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
+                {isMining && <div>Check Wallet</div>}
+                {/* {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>} */}
                 </Box>
             </Flex>
         </>

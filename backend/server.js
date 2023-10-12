@@ -28,10 +28,13 @@ app.use('/refresh', require('./routes/refreshRoutes'));
 app.use('/partners', require('./routes/partnersRoutes'));
 app.use('/campaign', require('./routes/campaignRoutes'));
 
+app.use('/nfts', require('./routes/nftsRoutes.js'));
+
 //routes protected by jwt verification
 app.use(verifyJWT);
 app.use("/logout", require('./routes/logoutRoutes'));
 app.use('/user', require('./routes/userRoutes'));
+
 
 
 mongoose.connection.once("open", () => {
