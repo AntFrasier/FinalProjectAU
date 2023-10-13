@@ -34,4 +34,4 @@ ChakraUI
     - fixe all tipos and missplells :p 
     - make the video presentation for AU
 
-Please feel free to contact me : [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/maranberc.svg?style=social&label=Follow%20MaranberC)](https://twitter.com/MaranberC)
+Please feel free to contact me : [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/maranberc.svg?style=social&label=MaranberC)](https://twitter.com/MaranberC)
