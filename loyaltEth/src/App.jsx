@@ -148,7 +148,6 @@ function App() {
       <Box pl={15}>
           <Routes>
               <Route path="/home" element = {<Index isConnecting={isConnecting}/>}/> 
-              <Route path="/about" element = {<About />} />
               <Route path="/campaigns" element = {<CampaignsAvailable />} />
               <Route path="/partners" element = {<Partners />} />
 

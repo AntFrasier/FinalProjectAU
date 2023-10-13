@@ -16,9 +16,6 @@ return (
                 <Heading as='h1'>LoyaltEth</Heading>
             </Link>
             <Box display="flex" alignItems="center" justifyContent="space-between" gap={10} pl={10}>
-                <Link to="/about" cursor="pointer">
-                    About
-                </Link>
                 <Link to="/campaigns" cursor="pointer">
                     Campaigns
                 </Link>
