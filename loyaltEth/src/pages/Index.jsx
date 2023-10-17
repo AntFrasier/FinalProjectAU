@@ -22,7 +22,7 @@ const Index = () => {
         <Text>If the customer used your service the 10 times during those 15 days, he'll be able to withdraw his reward. If he doesn't you can withdraw the balance of the nft Id from the contract.</Text>
         <Heading fontSize={"2rem "}as={"h3"} marginTop={25}>As a User</Heading>
         <Text>You can mint a loyaltEth card from one of our partner's <Link color="blue" href='/campaigns'> campaigns.</Link> You can see all your nfts on your dashboard.(once you have registred) Each Nft is an SVG nft that show you the numbers of time you used it, the numbers of days that remain to fulffill the required used and the balance of rewards that you'll be able to withdraw. As soon as the loyaltEth card is full (ex 10/10)!  you click on the withdraw button that will appears under your nft. If the validity date is passed the withdraw will go back to the partner, so must withdraw before the Dead line !</Text>
-        <Text>For an user as the owner of your LoyaltEth Card Nft to be able to gain his reward he'll have to : 
+        <Text>For an user as the owner of your LoyaltEth Card Nft to be able to gain his reward he'll have to : </Text>
           <UnorderedList paddingInline={20} paddingBlock={5}>
             <ListItem>
               buy "x" times the product, or use the service
@@ -34,11 +34,11 @@ const Index = () => {
               withdraw the "p" pecent of cahback that you earned !
             </ListItem>
           </UnorderedList>
-          </Text>
+          
           <Text>If there is time left and you know that you'll not be able to fullfill your nft until the end, you can sell it on our market place ! Let say you have an nft that you used 5 times on 10, it holds 0.5 Eth ! you can sell it, and the new user will be able to use it the 5 more times and whithdraw the rewards before the end of validity. </Text>
         <Heading fontSize={"2rem "} as={"h3"} marginTop={25}>Contact</Heading>
         <Text>
-          If you have any question, or want to work on this project and push it forward, please HMU on  <Link color="blue" href="https://twitter.com/MaranberC" target="_blank" rel='noreferrer nofollow noopener'>tweeter</Link> or on my <Link color="blue" href="https://cyril-maranber.com/contacts/" target="_blank">personal website</Link>.
+          If you have any question, or want to work on this project and push it forward, please HMU on  <Link color="blue" href="https://twitter.com/MaranberC" target="_blank" rel='noreferrer nofollow noopener'>twitter</Link> or on my <Link color="blue" href="https://cyril-maranber.com/contacts/" target="_blank">personal website</Link>.
         </Text>
       </Flex>
     )

@@ -15,5 +15,9 @@ router.get('/refresh', nftsController.refreshNftsDataBase);
 //@TODO : Should be protected for only admin middelware and the user himSelf?
 router.get('/:id', nftsController.getUserNfts);
 
+//@Desc get a Uri from a token id and nftcontractAddress
+//@params : params: {address: contractAddress, id: tokenId
+router.post('/tokenUri/', nftsController.getRefreshedTokenUri);
+
 
 module.exports = router; 

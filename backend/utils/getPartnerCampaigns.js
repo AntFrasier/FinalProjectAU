@@ -1,6 +1,5 @@
 const {Contract} = require("ethers");
 const contracts = require("../config/deployedContracts");
-require("dotenv").config()
 const {myProvider} = require("./myProvier");
 
 

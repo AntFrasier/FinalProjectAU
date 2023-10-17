@@ -1,27 +1,23 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
-
-
 // Use openzeppelin to inherit battle-tested implementations (ERC20, ERC721, etc)
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./LoyaltEthCards.sol";
 
-
 /**
  * A smart contract that allows changing a state variable of the contract and tracking the changes
  * It also allows the owner to withdraw the Ether in the contract
- * @author BuidlGuidl
+ * @author Cyril Maranber
  */
 contract PartnerVendorContract is Ownable {
-
 	address payable nftrAddress;
 	mapping (uint256 => uint256) private balanceOfNftId; // store the balance of each nft used
 	LoyaltEthCards public LOYALTETHCONTRACT;
 
 	constructor (address _nftAddress) {
 		nftrAddress = payable(_nftAddress);
-		LOYALTETHCONTRACT = LoyaltEthCards(nftrAddress);
+		LOYALTETHCONTRACT = LoyaltEthCards(nftrAddress); //should have a payable address to receive the funds instead of owner because the receiver could be a smart contrat an d not a eoa ??
 	}
 
 	function receivePayement(uint256 _myTokenId) external payable { //the amount that is sent should be handle front end 
@@ -30,7 +26,7 @@ contract PartnerVendorContract is Ownable {
 		require (LOYALTETHCONTRACT.getTokenUsedById(_myTokenId) < LOYALTETHCONTRACT.getTokenRequired(_myTokenId), "Your card is full");
 		require (LOYALTETHCONTRACT.getTokenDeadLine(_myTokenId) >= block.timestamp, "your card is expired");
 		uint256 reward = (msg.value * LOYALTETHCONTRACT.getTokenPercent(_myTokenId)) / 100;
-		(bool success, ) = owner().call{value: msg.value - reward}("");
+		(bool success, ) = owner().call{value: msg.value - reward}(""); //instead of owner it has to be the receiver address... .??
 		require (success, "tranfert failed");
 		balanceOfNftId[_myTokenId] += reward;
 		LOYALTETHCONTRACT.incTokenIdUsed(_myTokenId);
@@ -59,9 +55,6 @@ contract PartnerVendorContract is Ownable {
 	function getBalanceOfATokenId (uint256 _tokenId) external view returns (uint256) {
 		return balanceOfNftId[_tokenId];
 	}
-
-	
-	
 
 	receive() external payable {}
 }

@@ -1,38 +1,42 @@
-import { Button, Flex, Heading, Spinner, Text, Box } from '@chakra-ui/react';
-import PartnersList from './PartnersList';
+import { Button, Flex, Heading, Spinner} from '@chakra-ui/react';
 import useAuth from '../hooks/useAuth';
 import { useEffect, useState } from 'react';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import MyNft from './MyNft';
+
 
 const MemberComponent = () => {
-  const [isLoading, setLoading] = useState(false);
   const [myNfts, setMyNfts] = useState(null);
+  const [isLoading, setIsloading] = useState(false);
+  const [idToWithdraw, setIdeToWithdraw] = useState(null);
+  const [partnerVendorAddress, setPartnerVendorAddress] = useState();
+  const [refresh, setRefresh] = useState();
 
   const axiosPrivate =useAxiosPrivate();
   const {auth} = useAuth();
   const user = auth?.user;
 
-  const searchMyNfts = async () => {
-    setLoading(true);
-    await axiosPrivate("/nfts/refresh");
-    setLoading(false)
-  }
-
   useEffect(()=>{
     const controller = new AbortController();
     const getMyNfts = async () => {
+      setIsloading(true);
       try{
-        const response = await axiosPrivate.get(`/nfts/${user?.address}`);
-        console.log(response)
-        setMyNfts(response.data?.myNfts)
+        let response = await axiosPrivate.get(`/nfts/${user?.address}`)
+        console.log(response.data)
+        setMyNfts(response.data.myNfts)
+        
       } catch (err) {
-        console.error("Error while geting nfts from DataBase")
+        console.error("Error while geting nfts from DataBase", err)
+      } finally {
+        setIsloading(false)
       }
     }
     getMyNfts();
     return () => controller.abort();
 
-  },[isLoading])
+  },[])
+
+  
 
   return (
     <Flex direction={"column"}>
@@ -40,10 +44,14 @@ const MemberComponent = () => {
         <Heading mt={5} as={"h3"}>Welcome {user?.name}</Heading>  
         My Nfts :
         <Flex direction={"row"}>
-        {myNfts?.map((nft)=> <Box border={"1px solid"} borderRadius={"10px"} padding={10} margin={10}><img src={nft.rawMetadata.image} /></Box>)}
+        {isLoading? ( 
+          <Flex align={"center"} justify={"center"}> <Spinner /> </Flex>
+        ) : (
+        myNfts?.map((nft) => 
+            <MyNft nft = {nft}  setRefresh= {setRefresh}/>
+          )
+        )}
         </Flex>
-        {isLoading? <Spinner size={"xl"}/> : null}
-        {/* <Text>Your Nft ar not listed here yet ? <Button isLoading={isLoading} onClick={() => searchMyNfts()}>Searche my Nfts</Button></Text> */}
     </Flex>
   )
 }

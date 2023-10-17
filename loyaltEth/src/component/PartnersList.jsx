@@ -57,7 +57,7 @@ const PartnersList = ({partners}) => {
                     <Td key={`${partner._id}add`}>{partner.address}</Td>
                     <Td key={`${partner._id}web`}><a href={partner.webSite} target="_blank">{partner.webSite}</a></Td>
                     <Td key={`${partner._id}role`}>{partner.role}</Td>
-                    <Td key={`${partner._id}delete`}>{auth.user?.role == 3003 ? <Button onClick={ () => manageDelete(partner.address)}> delete</Button> : null}</Td>
+                    <Td key={`${partner._id}delete`}>{auth?.user?.role == 3003 ? <Button onClick={ () => manageDelete(partner.address)}> delete</Button> : null}</Td>
                 </Tr>
                 ) }
             {modal? <Modal /> : null }
